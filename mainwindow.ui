@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>607</width>
+    <height>345</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <widget class="QTabWidget" name="setupMonitorTabs">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>581</width>
+      <height>311</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="setupTab">
+     <attribute name="title">
+      <string>Setup</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>271</width>
+        <height>314</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="setupLayout">
+       <item>
+        <widget class="QWidget" name="roomsWidget" native="true">
+         <widget class="QLabel" name="roomsLabel">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>271</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Lucida Calligraphy</family>
+            <pointsize>13</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Rooms</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="roomSelect">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>35</y>
+            <width>251</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Gisha</family>
+            <stylestrategy>PreferAntialias</stylestrategy>
+           </font>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+          <property name="insertPolicy">
+           <enum>QComboBox::InsertAlphabetically</enum>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>16</width>
+            <height>16</height>
+           </size>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="newRoomButton">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>240</y>
+            <width>114</width>
+            <height>32</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Gisha</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>New Room</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="layoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>140</y>
+            <width>251</width>
+            <height>32</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="roomButton">
+           <item>
+            <widget class="QPushButton" name="saveRoom">
+             <property name="font">
+              <font>
+               <family>Gisha</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Save Room</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="removeRoom">
+             <property name="font">
+              <font>
+               <family>Gisha</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Remove Room</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="layoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>70</y>
+            <width>191</width>
+            <height>48</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="roomNameLayout">
+           <item>
+            <widget class="QLabel" name="roomNameLabel">
+             <property name="font">
+              <font>
+               <family>Gisha</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Name:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="roomName">
+             <property name="font">
+              <font>
+               <family>Gisha</family>
+              </font>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QLabel" name="roomSelectLabel">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>11</y>
+            <width>271</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Gisha</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Room Select</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButton">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>180</y>
+            <width>75</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>PushButton</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="deviceWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>1</y>
+        <width>280</width>
+        <height>311</height>
+       </rect>
+      </property>
+      <widget class="QLabel" name="deviceLabel">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>271</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Lucida Calligraphy</family>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Devices</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="deviceSelectLabel">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>11</y>
+         <width>271</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Device Select</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="deviceSelect">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>35</y>
+         <width>251</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+        </font>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::WheelFocus</enum>
+       </property>
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+       <property name="insertPolicy">
+        <enum>QComboBox::InsertAlphabetically</enum>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="newDevice">
+       <property name="geometry">
+        <rect>
+         <x>83</x>
+         <y>240</y>
+         <width>114</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>New Device</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>35</x>
+         <y>210</y>
+         <width>211</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="DeviceSaveRemoveLayout">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="deviceSaveButton">
+          <property name="font">
+           <font>
+            <family>Gisha</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Save Device</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deviceRemoveButton">
+          <property name="font">
+           <font>
+            <family>Gisha</family>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Remove Device</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QLineEdit" name="deviceName">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>65</y>
+         <width>116</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+        </font>
+       </property>
+       <property name="maxLength">
+        <number>32760</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="deviceNameLabel">
+       <property name="geometry">
+        <rect>
+         <x>41</x>
+         <y>65</y>
+         <width>34</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Name:</string>
+       </property>
+       <property name="buddy">
+        <cstring>deviceName</cstring>
+       </property>
+      </widget>
+      <widget class="QLabel" name="deviceTypeLabel">
+       <property name="geometry">
+        <rect>
+         <x>41</x>
+         <y>140</y>
+         <width>34</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Type:</string>
+       </property>
+       <property name="buddy">
+        <cstring>deviceRoomSelect</cstring>
+       </property>
+      </widget>
+      <widget class="QLabel" name="deviceIDLabel">
+       <property name="geometry">
+        <rect>
+         <x>41</x>
+         <y>90</y>
+         <width>52</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Device ID:</string>
+       </property>
+       <property name="buddy">
+        <cstring>deviceID</cstring>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="deviceID">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>90</y>
+         <width>116</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+        </font>
+       </property>
+      </widget>
+      <widget class="QLabel" name="roomLabel">
+       <property name="geometry">
+        <rect>
+         <x>41</x>
+         <y>115</y>
+         <width>34</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Room:</string>
+       </property>
+       <property name="buddy">
+        <cstring>deviceRoomSelect</cstring>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="deviceRoomSelect">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>115</y>
+         <width>85</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>69</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+        </font>
+       </property>
+      </widget>
+      <widget class="QLabel" name="statusLabel">
+       <property name="geometry">
+        <rect>
+         <x>41</x>
+         <y>165</y>
+         <width>35</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Status:</string>
+       </property>
+       <property name="buddy">
+        <cstring>deviceStatusSelect</cstring>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="deviceStatusSelect">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>165</y>
+         <width>60</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+        </font>
+       </property>
+      </widget>
+      <widget class="QLabel" name="valueLabel">
+       <property name="geometry">
+        <rect>
+         <x>41</x>
+         <y>190</y>
+         <width>50</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Gisha</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Set Value:</string>
+       </property>
+       <property name="buddy">
+        <cstring>deviceValue</cstring>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="deviceValue">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>190</y>
+         <width>69</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <zorder>deviceIDLabel</zorder>
+      <zorder>deviceID</zorder>
+      <zorder>roomLabel</zorder>
+      <zorder>deviceRoomSelect</zorder>
+      <zorder>statusLabel</zorder>
+      <zorder>deviceStatusSelect</zorder>
+      <zorder>valueLabel</zorder>
+      <zorder>deviceValue</zorder>
+      <zorder>deviceName</zorder>
+      <zorder>deviceNameLabel</zorder>
+      <zorder>layoutWidget</zorder>
+      <zorder>deviceLabel</zorder>
+      <zorder>deviceSelectLabel</zorder>
+      <zorder>deviceSelect</zorder>
+      <zorder>newDevice</zorder>
+      <zorder>deviceTypeLabel</zorder>
+     </widget>
+     <widget class="QComboBox" name="deviceTypeSelect">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>140</y>
+        <width>85</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>69</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Gisha</family>
+       </font>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <action name="actionSetup">
+   <property name="text">
+    <string>Setup</string>
+   </property>
+  </action>
+  <action name="actionMonitor">
+   <property name="text">
+    <string>Monitor</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
