@@ -22,12 +22,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle(tr("Home Logic Control Panel[*]"));
-    db = QSqlDatabase::addDatabase(SQL_DRIVER);
-    db.setHostName(SQL_SERVER);
-    db.setPort(SQL_PORT);
-    db.setDatabaseName(SQL_DATABASE);
-    db.setUserName(SQL_USER);
-    db.setPassword(SQL_PASS);
+    db = QSqlDatabase::addDatabase(DB_DRIVER);
+    db.setDatabaseName(DB_DBNAME);
+    db.setHostName(DB_HOST);
+    db.setUserName(DB_USER);
+    db.setPassword(DB_PASSWD);
     dbSuccess = db.open();
 
 }
