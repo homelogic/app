@@ -12,6 +12,8 @@
 #include <QtSerialPort/qserialport.h>
 #include <QDateTime>
 
+
+
 QT_USE_NAMESPACE_SERIALPORT
 
 MainWindow::MainWindow(QWidget *parent) :

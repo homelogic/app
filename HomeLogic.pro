@@ -8,6 +8,8 @@ CONFIG += serialport
 #QT += core gui webkit sql
 QT += core gui sql serialport
 
+QTPLUGIN += qsqlmysql
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = HomeLogic
