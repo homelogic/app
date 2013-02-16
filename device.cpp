@@ -249,7 +249,6 @@ void Device::light_on(QList<Device *> * deviceList, int index){
     QString plmID = get_PLM_ID(deviceList);
     qDebug() << "PLM ID: " << plmID;
 
-
     QByteArray msg;
     bool msgStatus;
     msg.resize(2);
@@ -282,6 +281,7 @@ void Device::door_unlock(QList<Device *> * deviceList, int index){
 
 void Device::thermostat_on(QList<Device *> * deviceList, int index){
     qDebug() << "Turn Thermostat on";
+
     //turn thermostat on
     deviceList->at(index)->status=1;
 }

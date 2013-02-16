@@ -3,7 +3,7 @@
 
 #define SQL_SERVER ""
 #define SQL_PORT 3306
-#define SQL_DATABASE "xyz"
+#define SQL_DATABASE "homelogic"
 #define SQL_USER    ""
 #define SQL_PASS    ""
 
