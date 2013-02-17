@@ -28,14 +28,14 @@ MainWindow::MainWindow(QWidget *parent) :
     db.setUserName(DB_USER);
     db.setPassword(DB_PASSWD);
     dbSuccess = db.open();
-    if (dbSuccess == false){
+    if (dbSuccess == true){
         QMessageBox msg;
         msg.setText("Error openning database");
         QSqlError err = db.lastError ();
         QString s_err("The database reported an error: ");
         s_err.append(err.databaseText());
-        msg.text().append(s_err);
-        msg.show();
+        msg.setInformativeText(s_err);
+     int ret = msg.exec();
     }
 
 }
