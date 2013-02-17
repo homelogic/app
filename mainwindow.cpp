@@ -28,7 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     db.setUserName(DB_USER);
     db.setPassword(DB_PASSWD);
     dbSuccess = db.open();
-    if (dbSuccess == true){
+    /* Handle errors when database does not open */
+    if (dbSuccess == false){
         QMessageBox msg;
         msg.setText("Error openning database");
         QSqlError err = db.lastError ();
