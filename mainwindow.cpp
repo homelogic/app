@@ -426,9 +426,9 @@ void MainWindow::on_pushButton_clicked()
 
     msg[0] = 0x02;
     msg[1] = 0x62;
-    msg[2] = 0x1D;
-    msg[3] = 0xE9;
-    msg[4] = 0x4B;
+    msg[2] = 0x20;
+    msg[3] = 0xCB;
+    msg[4] = 0xCF;
     msg[5] = 0x15;
     msg[6] = 0x11;
     msg[7] = 0xFF;
@@ -449,9 +449,9 @@ void MainWindow::on_pushButton_2_clicked()
 
     msg[0] = 0x02;
     msg[1] = 0x62;
-    msg[2] = 0x1D;
-    msg[3] = 0xE9;
-    msg[4] = 0x4B;
+    msg[2] = 0x20;
+    msg[3] = 0xCB;
+    msg[4] = 0xCF;
     msg[5] = 0x15;
     msg[6] = 0x13;
     msg[7] = 0x00;
