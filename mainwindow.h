@@ -24,6 +24,7 @@ public:
     void load_device_defaults();
     void load_device_list();
     void device_timer_start();
+     void change_updated(QString msg);
     
 private slots:
 
@@ -47,6 +48,7 @@ private slots:
     void device_timer_timeout();
 
     void on_pushButton_clicked();
+    void on_pushButton_2_clicked();
 
 private:
 

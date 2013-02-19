@@ -37,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
         s_err.append(err.databaseText());
         msg.setInformativeText(s_err);
      int ret = msg.exec();
+     if (!ret){
+         qDebug() << "Datbase connect error message not displayed.";
+     }
     }
 
 }
@@ -419,14 +422,39 @@ void MainWindow::on_newRoomButton_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     QByteArray msg;
-    msg.resize(2);
+    msg.resize(8);
+
     msg[0] = 0x02;
-    msg[1] = 0x60;
+    msg[1] = 0x62;
+    msg[2] = 0x1D;
+    msg[3] = 0xE9;
+    msg[4] = 0x4B;
+    msg[5] = 0x15;
+    msg[6] = 0x11;
+    msg[7] = 0xFF;
     bool msgStatus;
     myDevice.send(msg,&msgStatus);
     myDevice.readWait();
     myDevice.read();
-    qDebug() << "\nExecuted";
-    //myDevice.getUpdatedTime("A2B5D1");
+}
 
+void MainWindow::change_updated(QString msg){
+    ui->updatedWindow->setText(msg);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QByteArray msg;
+    msg.resize(8);
+
+    msg[0] = 0x02;
+    msg[1] = 0x62;
+    msg[2] = 0x1D;
+    msg[3] = 0xE9;
+    msg[4] = 0x4B;
+    msg[5] = 0x15;
+    msg[6] = 0x13;
+    msg[7] = 0x00;
+    bool msgStatus;
+    myDevice.send(msg,&msgStatus);
 }

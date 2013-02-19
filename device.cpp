@@ -41,13 +41,6 @@ QString Device::getDeviceID(){
 }
 
 
-void Device::read()
-{
-    response.append(serial.readLine());
-    qDebug() << response.toHex();
-    response.clear();
-}
-
 void Device::processTimeout()
 {
     response.clear();
@@ -98,12 +91,36 @@ void Device::send(QByteArray &data, bool *status)
         }
     }
     if(*status == true){
+        int success = 0;
         QString serialStatus;
         serialStatus = QObject::tr("Status: Running, connected to port %1.")
                 .arg("COM3");
         qDebug() << serialStatus;
-        serial.write(data);
+
+        /* Do not quit trying to send message until you receive success
+         * acknowledgement. Success ACK = 0x06 */
+        while(success==0){
+            response.clear();
+            serial.clear();
+            serial.write(data);
+            serial.waitForReadyRead(400);
+            response = serial.readAll();
+            if(response.endsWith(0x06)){ //Positive ACK received
+                //qDebug() << "Ends with 06";
+                success=1;
+            }
+        }
+        qDebug() << "Send response: " <<response.toHex();
+        response.clear();
+
     }
+}
+
+void Device::read()
+{
+    //response.append(serial.readLine());
+    //qDebug() << response.toHex();
+    //response.clear();
 }
 
 void Device::processError(const QString &error)
@@ -114,7 +131,7 @@ void Device::processError(const QString &error)
 }
 
 void Device::readWait(){
-    serial.waitForReadyRead(500);
+    serial.waitForReadyRead(400);
 }
 
 
@@ -137,7 +154,7 @@ void Device::check_updated(QList<Device *> * deviceList)
     QString deviceId, updatedQry;
     QSqlQuery query;
     QDateTime date;
-    qDebug() << "Current Device List:";
+    qDebug() << "Polling for changes...";
     for (int i=0; i<deviceList->size(); i++)
     {
         deviceId = deviceList->at(i)->deviceID;
@@ -152,7 +169,7 @@ void Device::check_updated(QList<Device *> * deviceList)
                 deviceList->at(i)->lastUpdated = date;
             }
         }
-        qDebug() << deviceList->at(i)->deviceID << deviceList->at(i)->name << deviceList->at(i)->lastUpdated;
+        //qDebug() << deviceList->at(i)->deviceID << deviceList->at(i)->name << deviceList->at(i)->lastUpdated;
     }
 }
 
@@ -261,9 +278,42 @@ void Device::light_on(QList<Device *> * deviceList, int index){
 }
 
 void Device::light_off(QList<Device *> * deviceList, int index){
-    qDebug() << "Turn light off";
+    //turn light off
 
-        //turn light off
+    QString devID = deviceList->at(index)->deviceID;
+    QString byte1 = "02";
+    QString byte2 = "62";
+    QString byte6 = "15";
+    QString byte7 = "13";
+    QString offBytes = "00";
+
+    QByteArray msg;
+    bool msgStatus;
+    /*msg.append(byte1.toStdString().c_str());
+    msg.append(byte2.toStdString().c_str());
+    msg.append(devID.mid(0,2).toStdString().c_str());
+    msg.append(devID.mid(2,2).toStdString().c_str());
+    msg.append(devID.mid(4,2).toStdString().c_str());
+    msg.append(byte6.toStdString().c_str());
+    msg.append(byte7.toStdString().c_str());
+    msg.append(offBytes.toStdString().c_str());
+    qDebug() << "Message to send: " << msg;*/
+    msg.resize(8);
+
+    msg[0] = 0x02;
+    msg[1] = 0x62;
+    msg[2] = 0x00;
+    msg[3] = 0x00;
+    msg[4] = 0x00;
+    msg[5] = 0x15;
+    msg[6] = 0x13;
+    msg[7] = 0x00;
+    msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+    qDebug() << "Send: " << msg.toHex();
+    send(msg,&msgStatus);
+    readWait();
+    read();
+
     deviceList->at(index)->status=0;
 }
 

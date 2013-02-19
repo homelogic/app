@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Feb 16 01:42:18 2013
+** Created: Mon Feb 18 23:16:46 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -22,6 +22,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QPushButton>
 #include <QtGui/QTabWidget>
+#include <QtGui/QTextBrowser>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
@@ -51,6 +52,7 @@ public:
     QLineEdit *roomName;
     QLabel *roomSelectLabel;
     QPushButton *pushButton;
+    QPushButton *pushButton_2;
     QWidget *deviceWidget;
     QLabel *deviceLabel;
     QLabel *deviceSelectLabel;
@@ -72,12 +74,15 @@ public:
     QLabel *valueLabel;
     QLineEdit *deviceValue;
     QComboBox *deviceTypeSelect;
+    QWidget *monitorTab;
+    QTextBrowser *updatedWindow;
+    QLabel *label;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(607, 345);
+        MainWindow->resize(607, 362);
         actionSetup = new QAction(MainWindow);
         actionSetup->setObjectName(QString::fromUtf8("actionSetup"));
         actionMonitor = new QAction(MainWindow);
@@ -88,7 +93,7 @@ public:
         setupMonitorTabs = new QTabWidget(centralWidget);
         setupMonitorTabs->setObjectName(QString::fromUtf8("setupMonitorTabs"));
         setupMonitorTabs->setEnabled(true);
-        setupMonitorTabs->setGeometry(QRect(10, 20, 581, 311));
+        setupMonitorTabs->setGeometry(QRect(10, 20, 581, 341));
         setupTab = new QWidget();
         setupTab->setObjectName(QString::fromUtf8("setupTab"));
         layoutWidget = new QWidget(setupTab);
@@ -181,6 +186,9 @@ public:
         pushButton = new QPushButton(roomsWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
         pushButton->setGeometry(QRect(40, 180, 75, 23));
+        pushButton_2 = new QPushButton(roomsWidget);
+        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        pushButton_2->setGeometry(QRect(120, 180, 75, 23));
 
         setupLayout->addWidget(roomsWidget);
 
@@ -304,6 +312,19 @@ public:
         deviceTypeSelect->setMinimumSize(QSize(69, 0));
         deviceTypeSelect->setFont(font4);
         setupMonitorTabs->addTab(setupTab, QString());
+        monitorTab = new QWidget();
+        monitorTab->setObjectName(QString::fromUtf8("monitorTab"));
+        updatedWindow = new QTextBrowser(monitorTab);
+        updatedWindow->setObjectName(QString::fromUtf8("updatedWindow"));
+        updatedWindow->setGeometry(QRect(10, 30, 551, 192));
+        label = new QLabel(monitorTab);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setGeometry(QRect(10, 10, 131, 16));
+        QFont font5;
+        font5.setFamily(QString::fromUtf8("Gisha"));
+        font5.setPointSize(11);
+        label->setFont(font5);
+        setupMonitorTabs->addTab(monitorTab, QString());
         MainWindow->setCentralWidget(centralWidget);
 #ifndef QT_NO_SHORTCUT
         deviceNameLabel->setBuddy(deviceName);
@@ -333,7 +354,8 @@ public:
         removeRoom->setText(QApplication::translate("MainWindow", "Remove Room", 0, QApplication::UnicodeUTF8));
         roomNameLabel->setText(QApplication::translate("MainWindow", "Name:", 0, QApplication::UnicodeUTF8));
         roomSelectLabel->setText(QApplication::translate("MainWindow", "Room Select", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "On", 0, QApplication::UnicodeUTF8));
+        pushButton_2->setText(QApplication::translate("MainWindow", "Off", 0, QApplication::UnicodeUTF8));
         deviceLabel->setText(QApplication::translate("MainWindow", "Devices", 0, QApplication::UnicodeUTF8));
         deviceSelectLabel->setText(QApplication::translate("MainWindow", "Device Select", 0, QApplication::UnicodeUTF8));
         newDevice->setText(QApplication::translate("MainWindow", "New Device", 0, QApplication::UnicodeUTF8));
@@ -346,6 +368,8 @@ public:
         statusLabel->setText(QApplication::translate("MainWindow", "Status:", 0, QApplication::UnicodeUTF8));
         valueLabel->setText(QApplication::translate("MainWindow", "Set Value:", 0, QApplication::UnicodeUTF8));
         setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(setupTab), QApplication::translate("MainWindow", "Setup", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "Last Updated:", 0, QApplication::UnicodeUTF8));
+        setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(monitorTab), QApplication::translate("MainWindow", "Monitor", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

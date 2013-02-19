@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>607</width>
-    <height>345</height>
+    <height>362</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
       <x>10</x>
       <y>20</y>
       <width>581</width>
-      <height>311</height>
+      <height>341</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -227,7 +227,20 @@
            </rect>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>On</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>180</y>
+            <width>75</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Off</string>
           </property>
          </widget>
         </widget>
@@ -636,6 +649,40 @@
        <font>
         <family>Gisha</family>
        </font>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="monitorTab">
+     <attribute name="title">
+      <string>Monitor</string>
+     </attribute>
+     <widget class="QTextBrowser" name="updatedWindow">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>551</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>131</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Gisha</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Last Updated:</string>
       </property>
      </widget>
     </widget>
