@@ -101,23 +101,24 @@ void Device::send(QByteArray &data, bool *status)
 
         /* Do not quit trying to send message until you receive success
          * acknowledgement. Success ACK = 0x06
-         * if the message is not sent successfully in 5 tries, quit */
-        while(success==0 && timeout <= 10){
+         * if the message is not sent successfully in 6 tries, quit */
+        while(success==0 && timeout <= 6){
             response.clear();
             qDebug() << "Trying to write: " << data.toHex();
             serial.write(data);
             serial.flush();
-            serial.waitForReadyRead(200);
+            serial.waitForReadyRead(400);
             response = serial.readAll();
             if(response.endsWith(0x06)){ //Positive ACK received
-                qDebug() << "Ends with 06";
+                qDebug() << "Successful Send: " << response.toHex();
                 success=1;
+            }else{
+                qDebug() << "Error - Received: " <<response.toHex();
+                timeout++;
             }
-            qDebug() << "Error: " <<response.toHex();
-            timeout++;
         }
 
-        qDebug() << "Send response: " <<response.toHex();
+
         response.clear();
 
     }
@@ -134,7 +135,10 @@ void Device::processError(const QString &error)
 {
     QString status = QObject::tr("Status: Not running, %1.").arg(error);
     qDebug() << status;
-    qDebug() << "No Traffic";
+    QMessageBox msg;
+    msg.setWindowTitle("Error Opening COM Port");
+    msg.setInformativeText(status);
+    msg.exec();
 }
 
 void Device::readWait(){
@@ -315,14 +319,46 @@ void Device::light_off(QList<Device *> * deviceList, int index){
 }
 
 void Device::door_lock(QList<Device *> * deviceList, int index){
-    qDebug() << "Lock Door";
-        //lock door
+    //Lock Door
+    QString devID = deviceList->at(index)->deviceID;
+
+    QByteArray msg;
+    bool msgStatus;
+    msg.resize(8);
+
+    msg[0] = 0x02;
+    msg[1] = 0x62;
+    msg[2] = 0x00;
+    msg[3] = 0x00;
+    msg[4] = 0x00;
+    msg[5] = 0x0F;
+    msg[6] = 0x11;
+    msg[7] = 0x00;
+    msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+    qDebug() << "Send: " << msg.toHex();
+    send(msg,&msgStatus);
     deviceList->at(index)->status=1;
 }
 
 void Device::door_unlock(QList<Device *> * deviceList, int index){
-    qDebug() << "Unlock the Door";
-        //unlock door
+    //Unlock Door
+    QString devID = deviceList->at(index)->deviceID;
+
+    QByteArray msg;
+    bool msgStatus;
+    msg.resize(8);
+
+    msg[0] = 0x02;
+    msg[1] = 0x62;
+    msg[2] = 0x00;
+    msg[3] = 0x00;
+    msg[4] = 0x00;
+    msg[5] = 0x0F;
+    msg[6] = 0x11;
+    msg[7] = 0xFF;
+    msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+    qDebug() << "Send: " << msg.toHex();
+    send(msg,&msgStatus);
     deviceList->at(index)->status=0;
 }
 
