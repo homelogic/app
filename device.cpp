@@ -104,14 +104,10 @@ void Device::send(QByteArray &data, bool *status)
          * if the message is not sent successfully in 5 tries, quit */
         while(success==0 && timeout <= 10){
             response.clear();
-            serial.clear();
+            qDebug() << "Trying to write: " << data.toHex();
             serial.write(data);
-            serial.waitForReadyRead(400);
-            response = serial.readAll();
-            response.clear();
-            serial.clear();
-            serial.write(data);
-            serial.waitForReadyRead(400);
+            serial.flush();
+            serial.waitForReadyRead(200);
             response = serial.readAll();
             if(response.endsWith(0x06)){ //Positive ACK received
                 qDebug() << "Ends with 06";
