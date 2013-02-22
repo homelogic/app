@@ -22,6 +22,7 @@ public:
     QDateTime getUpdatedTime(QString devID);
     void check_updated(QList<Device *> * deviceList);
     void statusChanged(QList<Device *> * deviceList, int index);
+    void serialFailed(QString devID, int status);
 
     /* Functions for device action */
     void light_on(QList<Device *> * deviceList, int index);

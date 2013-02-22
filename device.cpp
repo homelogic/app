@@ -99,6 +99,8 @@ void Device::send(QByteArray &data, bool *status)
                 .arg("COM3");
         qDebug() << serialStatus;
 
+        qDebug() << "Size of Data to write: " << data.length();
+
         /* Do not quit trying to send message until you receive success
          * acknowledgement. Success ACK = 0x06
          * if the message is not sent successfully in 6 tries, quit */
@@ -109,7 +111,7 @@ void Device::send(QByteArray &data, bool *status)
             serial.flush();
             serial.waitForReadyRead(400);
             response = serial.readAll();
-            if(response.endsWith(0x06)){ //Positive ACK received
+            if( (response.endsWith(0x06)) || (response[9]==data[0] && response[10]==data[1])){ //Positive ACK received
                 qDebug() << "Successful Send: " << response.toHex();
                 success=1;
             }else{
@@ -118,7 +120,9 @@ void Device::send(QByteArray &data, bool *status)
             }
         }
 
-
+        if(success==0){
+            *status = false;
+        }
         response.clear();
 
     }
@@ -270,6 +274,22 @@ void Device::statusChanged(QList<Device *> * deviceList, int index){
     }
 }
 
+/* Function to handle cases when serial action to update device fails */
+void Device::serialFailed(QString devID, int status){
+    QMessageBox msg;
+    QSqlQuery query;
+    QString updateStr = QString("UPDATE tbl_device SET status=%1 WHERE device_id='%2'").arg(status).arg(devID);
+    qDebug() << "Failed update string: " << updateStr;
+    bool dbStatus = query.exec(updateStr);
+    if(dbStatus!=true){
+        msg.setInformativeText("The device failed to update status & db update operation failed. You should reboot the system");
+    }
+    else{
+        msg.setInformativeText("The device failed to update, the status has been reverted in the database!");
+    }
+    msg.exec();
+}
+
 
 /* Functions for device action */
 void Device::light_on(QList<Device *> * deviceList, int index){
@@ -292,7 +312,13 @@ void Device::light_on(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     send(msg,&msgStatus);
-    deviceList->at(index)->status=1;
+    if(msgStatus==true){
+        deviceList->at(index)->status=1;
+    } else{
+        serialFailed(devID,0);
+        deviceList->at(index)->status=0;
+    }
+
 }
 
 void Device::light_off(QList<Device *> * deviceList, int index){
@@ -315,7 +341,12 @@ void Device::light_off(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     send(msg,&msgStatus);
-    deviceList->at(index)->status=0;
+    if(msgStatus==true){
+        deviceList->at(index)->status=0;
+    } else{
+        serialFailed(devID,1);
+        deviceList->at(index)->status=1;
+    }
 }
 
 void Device::door_lock(QList<Device *> * deviceList, int index){
@@ -337,7 +368,14 @@ void Device::door_lock(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     send(msg,&msgStatus);
-    deviceList->at(index)->status=1;
+
+    if(msgStatus==true){
+        deviceList->at(index)->status=1;
+    } else{
+        serialFailed(devID,0);
+        deviceList->at(index)->status=0;
+    }
+
 }
 
 void Device::door_unlock(QList<Device *> * deviceList, int index){
@@ -359,7 +397,12 @@ void Device::door_unlock(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     send(msg,&msgStatus);
-    deviceList->at(index)->status=0;
+    if(msgStatus==true){
+        deviceList->at(index)->status=0;
+    } else{
+        serialFailed(devID,0);
+        deviceList->at(index)->status=1;
+    }
 }
 
 void Device::thermostat_on(QList<Device *> * deviceList, int index){
