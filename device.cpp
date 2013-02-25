@@ -46,6 +46,98 @@ void Device::processTimeout()
 {
     response.clear();
 }
+void Device::send(QByteArray &data, bool *status, int *devStatus){
+    *status = true;
+    if (serial.portName() != "COM3") {
+        serial.close();
+        serial.setPort("COM3");
+
+        if (!serial.open(QIODevice::ReadWrite)) {
+            processError(QObject::tr("Can't open %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            *status = false;
+            return;
+        }
+
+        if (!serial.setBaudRate(QSerialPort::Baud19200)) {
+            processError(QObject::tr("Can't set rate 19200 baud to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setDataBits(QSerialPort::Data8)) {
+            processError(QObject::tr("Can't set 8 data bits to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setParity(QSerialPort::NoParity)) {
+            processError(QObject::tr("Can't set no patity to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setStopBits(QSerialPort::OneStop)) {
+            processError(QObject::tr("Can't set 1 stop bit to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setFlowControl(QSerialPort::NoFlowControl)) {
+            processError(QObject::tr("Can't set no flow control to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+    }
+    if(*status == true){
+        int success = 0;
+        int timeout = 0;
+        QString serialStatus;
+        serialStatus = QObject::tr("Status: Running, connected to port %1.")
+                .arg("COM3");
+        qDebug() << serialStatus;
+
+        qDebug() << "Size of Data to write: " << data.length();
+
+        /* Do not quit trying to send message until you receive success
+         * acknowledgement. Success ACK = 0x06
+         * if the message is not sent successfully in 6 tries, quit */
+        while(success==0 && timeout <= 6){
+            response.clear();
+            qDebug() << "Trying to write: " << data.toHex();
+            serial.write(data);
+            serial.flush();
+            serial.waitForReadyRead(450);
+            response = serial.readAll();
+            if( response.endsWith(0x15)){ //Negative Acknowledgement
+                qDebug() << "Error - NACK: " <<response.toHex();
+                timeout++;
+            }
+            else if( (response.endsWith(0x06)) ){ //Positive ACK received
+                qDebug() << "Successful Send: " << response.toHex();
+                success=1;
+                qDebug() << "Found 21 @ " << response.indexOf(0x21);
+                if( (response[response.indexOf(0x21)+2]==0xFF) && (response.indexOf(0x21)!=-1) ){
+                    *devStatus = 1;
+                    qDebug() << "Light is currently ON";
+                }
+                else if( (response[response.indexOf(0x21)+2]==0x00) && (response.indexOf(0x21)!=-1) ){
+                    *devStatus = 0;
+                    qDebug() << "Light is currently OFF";
+                }
+            }else{
+                qDebug() << "Error - Received: " <<response.toHex();
+                timeout++;
+            }
+        }
+
+        if(success==0){
+            *status = false;
+        }
+        response.clear();
+
+    }
+}
 
 void Device::send(QByteArray &data, bool *status)
 {
@@ -185,6 +277,37 @@ void Device::check_updated(QList<Device *> * deviceList)
             }
         }
         //qDebug() << deviceList->at(i)->deviceID << deviceList->at(i)->name << deviceList->at(i)->lastUpdated;
+    }
+}
+
+void Device::currentStatus(QList<Device *> * deviceList){
+    QString devID, updateQry;
+    int devStatus, updateStatus;
+    updateStatus=0;
+    QSqlQuery query;
+    for(int i=0; i<deviceList->size(); i++){
+        if(deviceList->at(i)->type == "Light"){
+            devStatus = deviceList->at(i)->status;
+            devID = deviceList->at(i)->deviceID;
+            QByteArray msg;
+            bool msgStatus;
+            msg.resize(8);
+
+            msg[0] = 0x02;
+            msg[1] = 0x62;
+            msg[2] = 0x00;
+            msg[3] = 0x00;
+            msg[4] = 0x00;
+            msg[5] = 0x05;
+            msg[6] = 0x19;
+            msg[7] = 0x00;
+            msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+            qDebug() << "Has device " << deviceList->at(i)->name << "Changed? Send: " << msg.toHex();
+            send(msg,&msgStatus, &updateStatus);
+            if(devStatus!=updateStatus){
+                qDebug() << "Light Status is now: " << updateStatus;
+            }
+        }
     }
 }
 

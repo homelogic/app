@@ -10,5 +10,6 @@
 
 /* Define QTimer in ms before interrupt signal */
 #define DEVICE_QUERY_WAIT   2000
+#define CHECK_UPDATED_WAIT  5119
 
 #endif // DEFAULTS_H

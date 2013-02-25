@@ -49,15 +49,23 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::device_timer_start(){
+void MainWindow::timer_start(){
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(device_timer_timeout()));
     timer->start(DEVICE_QUERY_WAIT);
+    QTimer *statusTimer = new QTimer(this);
+    connect(statusTimer, SIGNAL(timeout()), this, SLOT(check_status_timeout()));
+    statusTimer->start(CHECK_UPDATED_WAIT);
 }
 
 void MainWindow::device_timer_timeout(){
     //qDebug() << "\nTimeout Received";
     myDevice.check_updated(&devices);
+}
+
+void MainWindow::check_status_timeout(){
+    qDebug() << "Second timeout received";
+    myDevice.currentStatus(&devices);
 }
 
 void MainWindow::load_device_defaults(){
@@ -429,13 +437,12 @@ void MainWindow::on_pushButton_clicked()
     msg[2] = 0x20;
     msg[3] = 0xCB;
     msg[4] = 0xCF;
-    msg[5] = 0x15;
-    msg[6] = 0x11;
+    msg[5] = 0x05;
+    msg[6] = 0x19;
     msg[7] = 0xFF;
     bool msgStatus;
     myDevice.send(msg,&msgStatus);
-    myDevice.readWait();
-    myDevice.read();
+
 }
 
 void MainWindow::change_updated(QString msg){
@@ -452,8 +459,8 @@ void MainWindow::on_pushButton_2_clicked()
     msg[2] = 0x20;
     msg[3] = 0xCB;
     msg[4] = 0xCF;
-    msg[5] = 0x15;
-    msg[6] = 0x13;
+    msg[5] = 0x05;
+    msg[6] = 0x19;
     msg[7] = 0x00;
     bool msgStatus;
     myDevice.send(msg,&msgStatus);

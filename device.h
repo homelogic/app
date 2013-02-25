@@ -21,8 +21,10 @@ public:
     void readWait();
     QDateTime getUpdatedTime(QString devID);
     void check_updated(QList<Device *> * deviceList);
+    void currentStatus(QList<Device *> * deviceList);
     void statusChanged(QList<Device *> * deviceList, int index);
     void serialFailed(QString devID, int status);
+
 
     /* Functions for device action */
     void light_on(QList<Device *> * deviceList, int index);
@@ -36,6 +38,7 @@ public:
 public slots:
 
     void send(QByteArray &data, bool *status);
+    void send(QByteArray &data, bool *status, int *devStatus);
     void read();
     void processTimeout();
     void processError(const QString &error);

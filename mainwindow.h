@@ -23,8 +23,8 @@ public:
 
     void load_device_defaults();
     void load_device_list();
-    void device_timer_start();
-     void change_updated(QString msg);
+    void timer_start();
+    void change_updated(QString msg);
     
 private slots:
 
@@ -46,6 +46,8 @@ private slots:
     void on_newRoomButton_clicked();
 
     void device_timer_timeout();
+
+    void check_status_timeout();
 
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
