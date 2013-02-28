@@ -8,11 +8,6 @@
 #include <QtSerialPort/qserialportinfo.h>
 
 
-
-
-
-QT_USE_NAMESPACE_SERIALPORT
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

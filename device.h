@@ -5,8 +5,6 @@
 #include <QDateTime>
 #include <QtSerialPort/qserialport.h>
 
-QT_USE_NAMESPACE_SERIALPORT
-
 class Device
 {
 public:
@@ -24,6 +22,7 @@ public:
     void currentStatus(QList<Device *> * deviceList);
     void statusChanged(QList<Device *> * deviceList, int index);
     void serialFailed(QString devID, int status);
+    void open_port();
 
 
     /* Functions for device action */
@@ -42,6 +41,7 @@ public slots:
     void read();
     void processTimeout();
     void processError(const QString &error);
+
 
 private:
     QString name;   //name of device

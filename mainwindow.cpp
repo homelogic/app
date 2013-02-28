@@ -13,9 +13,6 @@
 #include <QDateTime>
 
 
-
-QT_USE_NAMESPACE_SERIALPORT
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -23,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle(tr("Home Logic Control Panel[*]"));
     db = QSqlDatabase::addDatabase(DB_DRIVER);
+    db.setHostName(DB_HOST);
     db.setDatabaseName(DB_DBNAME);
     db.setHostName(DB_HOST);
     db.setUserName(DB_USER);
@@ -429,6 +427,7 @@ void MainWindow::on_newRoomButton_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
+    int devStatus = 0;
     QByteArray msg;
     msg.resize(8);
 
@@ -441,8 +440,8 @@ void MainWindow::on_pushButton_clicked()
     msg[6] = 0x19;
     msg[7] = 0xFF;
     bool msgStatus;
-    myDevice.send(msg,&msgStatus);
-
+    myDevice.send(msg,&msgStatus, &devStatus);
+    qDebug() << "Status returned: " << devStatus;
 }
 
 void MainWindow::change_updated(QString msg){
@@ -451,6 +450,7 @@ void MainWindow::change_updated(QString msg){
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    int devStatus = 0;
     QByteArray msg;
     msg.resize(8);
 
@@ -463,5 +463,6 @@ void MainWindow::on_pushButton_2_clicked()
     msg[6] = 0x19;
     msg[7] = 0x00;
     bool msgStatus;
-    myDevice.send(msg,&msgStatus);
+    myDevice.send(msg,&msgStatus, &devStatus);
+    qDebug() << "Status returned: " << devStatus;
 }

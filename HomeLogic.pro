@@ -1,14 +1,16 @@
-CONFIG += serialport
 #-------------------------------------------------
 #
 # Project created by QtCreator 2013-01-14T19:54:01
 #
 #-------------------------------------------------
 
-#QT += core gui webkit sql
-QT += core gui sql serialport
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT       += widgets serialport serialport
+} else {
+    include($$QTSERIALPORT_PROJECT_ROOT/src/serialport/qt4support/serialport.prf)
+}
+QT += core gui sql
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = HomeLogic
 TEMPLATE = app

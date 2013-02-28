@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Feb 18 23:16:46 2013
-**      by: Qt User Interface Compiler version 4.8.4
+** Created by: Qt User Interface Compiler version 5.0.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -11,20 +10,20 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QComboBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QMainWindow>
-#include <QtGui/QPushButton>
-#include <QtGui/QTabWidget>
-#include <QtGui/QTextBrowser>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QWidget>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -81,44 +80,44 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+            MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(607, 362);
         actionSetup = new QAction(MainWindow);
-        actionSetup->setObjectName(QString::fromUtf8("actionSetup"));
+        actionSetup->setObjectName(QStringLiteral("actionSetup"));
         actionMonitor = new QAction(MainWindow);
-        actionMonitor->setObjectName(QString::fromUtf8("actionMonitor"));
+        actionMonitor->setObjectName(QStringLiteral("actionMonitor"));
         centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
         centralWidget->setAutoFillBackground(false);
         setupMonitorTabs = new QTabWidget(centralWidget);
-        setupMonitorTabs->setObjectName(QString::fromUtf8("setupMonitorTabs"));
+        setupMonitorTabs->setObjectName(QStringLiteral("setupMonitorTabs"));
         setupMonitorTabs->setEnabled(true);
         setupMonitorTabs->setGeometry(QRect(10, 20, 581, 341));
         setupTab = new QWidget();
-        setupTab->setObjectName(QString::fromUtf8("setupTab"));
+        setupTab->setObjectName(QStringLiteral("setupTab"));
         layoutWidget = new QWidget(setupTab);
-        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
         layoutWidget->setGeometry(QRect(0, 0, 271, 314));
         setupLayout = new QHBoxLayout(layoutWidget);
         setupLayout->setSpacing(6);
         setupLayout->setContentsMargins(11, 11, 11, 11);
-        setupLayout->setObjectName(QString::fromUtf8("setupLayout"));
+        setupLayout->setObjectName(QStringLiteral("setupLayout"));
         setupLayout->setContentsMargins(0, 0, 0, 0);
         roomsWidget = new QWidget(layoutWidget);
-        roomsWidget->setObjectName(QString::fromUtf8("roomsWidget"));
+        roomsWidget->setObjectName(QStringLiteral("roomsWidget"));
         roomsLabel = new QLabel(roomsWidget);
-        roomsLabel->setObjectName(QString::fromUtf8("roomsLabel"));
+        roomsLabel->setObjectName(QStringLiteral("roomsLabel"));
         roomsLabel->setGeometry(QRect(0, 0, 271, 16));
         QFont font;
-        font.setFamily(QString::fromUtf8("Lucida Calligraphy"));
+        font.setFamily(QStringLiteral("Lucida Calligraphy"));
         font.setPointSize(13);
         roomsLabel->setFont(font);
         roomsLabel->setAlignment(Qt::AlignCenter);
         roomSelect = new QComboBox(roomsWidget);
-        roomSelect->setObjectName(QString::fromUtf8("roomSelect"));
+        roomSelect->setObjectName(QStringLiteral("roomSelect"));
         roomSelect->setGeometry(QRect(10, 35, 251, 20));
         QFont font1;
-        font1.setFamily(QString::fromUtf8("Gisha"));
+        font1.setFamily(QStringLiteral("Gisha"));
         font1.setStyleStrategy(QFont::PreferAntialias);
         roomSelect->setFont(font1);
         roomSelect->setLayoutDirection(Qt::LeftToRight);
@@ -126,143 +125,143 @@ public:
         roomSelect->setInsertPolicy(QComboBox::InsertAlphabetically);
         roomSelect->setIconSize(QSize(16, 16));
         newRoomButton = new QPushButton(roomsWidget);
-        newRoomButton->setObjectName(QString::fromUtf8("newRoomButton"));
+        newRoomButton->setObjectName(QStringLiteral("newRoomButton"));
         newRoomButton->setGeometry(QRect(80, 240, 114, 32));
         QFont font2;
-        font2.setFamily(QString::fromUtf8("Gisha"));
+        font2.setFamily(QStringLiteral("Gisha"));
         font2.setPointSize(10);
         newRoomButton->setFont(font2);
         layoutWidget1 = new QWidget(roomsWidget);
-        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
         layoutWidget1->setGeometry(QRect(10, 140, 251, 32));
         roomButton = new QHBoxLayout(layoutWidget1);
         roomButton->setSpacing(6);
         roomButton->setContentsMargins(11, 11, 11, 11);
-        roomButton->setObjectName(QString::fromUtf8("roomButton"));
+        roomButton->setObjectName(QStringLiteral("roomButton"));
         roomButton->setContentsMargins(0, 0, 0, 0);
         saveRoom = new QPushButton(layoutWidget1);
-        saveRoom->setObjectName(QString::fromUtf8("saveRoom"));
+        saveRoom->setObjectName(QStringLiteral("saveRoom"));
         QFont font3;
-        font3.setFamily(QString::fromUtf8("Gisha"));
+        font3.setFamily(QStringLiteral("Gisha"));
         font3.setPointSize(9);
         saveRoom->setFont(font3);
 
         roomButton->addWidget(saveRoom);
 
         removeRoom = new QPushButton(layoutWidget1);
-        removeRoom->setObjectName(QString::fromUtf8("removeRoom"));
+        removeRoom->setObjectName(QStringLiteral("removeRoom"));
         removeRoom->setFont(font3);
 
         roomButton->addWidget(removeRoom);
 
         layoutWidget2 = new QWidget(roomsWidget);
-        layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
+        layoutWidget2->setObjectName(QStringLiteral("layoutWidget2"));
         layoutWidget2->setGeometry(QRect(40, 70, 191, 48));
         roomNameLayout = new QVBoxLayout(layoutWidget2);
         roomNameLayout->setSpacing(6);
         roomNameLayout->setContentsMargins(11, 11, 11, 11);
-        roomNameLayout->setObjectName(QString::fromUtf8("roomNameLayout"));
+        roomNameLayout->setObjectName(QStringLiteral("roomNameLayout"));
         roomNameLayout->setContentsMargins(0, 0, 0, 0);
         roomNameLabel = new QLabel(layoutWidget2);
-        roomNameLabel->setObjectName(QString::fromUtf8("roomNameLabel"));
+        roomNameLabel->setObjectName(QStringLiteral("roomNameLabel"));
         roomNameLabel->setFont(font3);
         roomNameLabel->setAlignment(Qt::AlignCenter);
 
         roomNameLayout->addWidget(roomNameLabel);
 
         roomName = new QLineEdit(layoutWidget2);
-        roomName->setObjectName(QString::fromUtf8("roomName"));
+        roomName->setObjectName(QStringLiteral("roomName"));
         QFont font4;
-        font4.setFamily(QString::fromUtf8("Gisha"));
+        font4.setFamily(QStringLiteral("Gisha"));
         roomName->setFont(font4);
 
         roomNameLayout->addWidget(roomName);
 
         roomSelectLabel = new QLabel(roomsWidget);
-        roomSelectLabel->setObjectName(QString::fromUtf8("roomSelectLabel"));
+        roomSelectLabel->setObjectName(QStringLiteral("roomSelectLabel"));
         roomSelectLabel->setGeometry(QRect(0, 11, 271, 31));
         roomSelectLabel->setFont(font2);
         roomSelectLabel->setAlignment(Qt::AlignCenter);
         pushButton = new QPushButton(roomsWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        pushButton->setObjectName(QStringLiteral("pushButton"));
         pushButton->setGeometry(QRect(40, 180, 75, 23));
         pushButton_2 = new QPushButton(roomsWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
         pushButton_2->setGeometry(QRect(120, 180, 75, 23));
 
         setupLayout->addWidget(roomsWidget);
 
         deviceWidget = new QWidget(setupTab);
-        deviceWidget->setObjectName(QString::fromUtf8("deviceWidget"));
+        deviceWidget->setObjectName(QStringLiteral("deviceWidget"));
         deviceWidget->setGeometry(QRect(290, 1, 280, 311));
         deviceLabel = new QLabel(deviceWidget);
-        deviceLabel->setObjectName(QString::fromUtf8("deviceLabel"));
+        deviceLabel->setObjectName(QStringLiteral("deviceLabel"));
         deviceLabel->setGeometry(QRect(0, 0, 271, 16));
         deviceLabel->setFont(font);
         deviceLabel->setAlignment(Qt::AlignCenter);
         deviceSelectLabel = new QLabel(deviceWidget);
-        deviceSelectLabel->setObjectName(QString::fromUtf8("deviceSelectLabel"));
+        deviceSelectLabel->setObjectName(QStringLiteral("deviceSelectLabel"));
         deviceSelectLabel->setGeometry(QRect(0, 11, 271, 31));
         deviceSelectLabel->setFont(font2);
         deviceSelectLabel->setAlignment(Qt::AlignCenter);
         deviceSelect = new QComboBox(deviceWidget);
-        deviceSelect->setObjectName(QString::fromUtf8("deviceSelect"));
+        deviceSelect->setObjectName(QStringLiteral("deviceSelect"));
         deviceSelect->setGeometry(QRect(10, 35, 251, 20));
         deviceSelect->setFont(font4);
         deviceSelect->setFocusPolicy(Qt::WheelFocus);
         deviceSelect->setEditable(false);
         deviceSelect->setInsertPolicy(QComboBox::InsertAlphabetically);
         newDevice = new QPushButton(deviceWidget);
-        newDevice->setObjectName(QString::fromUtf8("newDevice"));
+        newDevice->setObjectName(QStringLiteral("newDevice"));
         newDevice->setGeometry(QRect(83, 240, 114, 32));
         newDevice->setFont(font2);
         layoutWidget3 = new QWidget(deviceWidget);
-        layoutWidget3->setObjectName(QString::fromUtf8("layoutWidget3"));
+        layoutWidget3->setObjectName(QStringLiteral("layoutWidget3"));
         layoutWidget3->setGeometry(QRect(35, 210, 211, 31));
         DeviceSaveRemoveLayout = new QHBoxLayout(layoutWidget3);
         DeviceSaveRemoveLayout->setSpacing(6);
         DeviceSaveRemoveLayout->setContentsMargins(11, 11, 11, 11);
-        DeviceSaveRemoveLayout->setObjectName(QString::fromUtf8("DeviceSaveRemoveLayout"));
+        DeviceSaveRemoveLayout->setObjectName(QStringLiteral("DeviceSaveRemoveLayout"));
         DeviceSaveRemoveLayout->setContentsMargins(0, 0, 0, 0);
         deviceSaveButton = new QPushButton(layoutWidget3);
-        deviceSaveButton->setObjectName(QString::fromUtf8("deviceSaveButton"));
+        deviceSaveButton->setObjectName(QStringLiteral("deviceSaveButton"));
         deviceSaveButton->setFont(font3);
 
         DeviceSaveRemoveLayout->addWidget(deviceSaveButton);
 
         deviceRemoveButton = new QPushButton(layoutWidget3);
-        deviceRemoveButton->setObjectName(QString::fromUtf8("deviceRemoveButton"));
+        deviceRemoveButton->setObjectName(QStringLiteral("deviceRemoveButton"));
         deviceRemoveButton->setFont(font3);
 
         DeviceSaveRemoveLayout->addWidget(deviceRemoveButton);
 
         deviceName = new QLineEdit(deviceWidget);
-        deviceName->setObjectName(QString::fromUtf8("deviceName"));
+        deviceName->setObjectName(QStringLiteral("deviceName"));
         deviceName->setGeometry(QRect(100, 65, 116, 20));
         deviceName->setFont(font4);
         deviceName->setMaxLength(32760);
         deviceNameLabel = new QLabel(deviceWidget);
-        deviceNameLabel->setObjectName(QString::fromUtf8("deviceNameLabel"));
+        deviceNameLabel->setObjectName(QStringLiteral("deviceNameLabel"));
         deviceNameLabel->setGeometry(QRect(41, 65, 34, 20));
         deviceNameLabel->setFont(font3);
         deviceTypeLabel = new QLabel(deviceWidget);
-        deviceTypeLabel->setObjectName(QString::fromUtf8("deviceTypeLabel"));
+        deviceTypeLabel->setObjectName(QStringLiteral("deviceTypeLabel"));
         deviceTypeLabel->setGeometry(QRect(41, 140, 34, 20));
         deviceTypeLabel->setFont(font3);
         deviceIDLabel = new QLabel(deviceWidget);
-        deviceIDLabel->setObjectName(QString::fromUtf8("deviceIDLabel"));
+        deviceIDLabel->setObjectName(QStringLiteral("deviceIDLabel"));
         deviceIDLabel->setGeometry(QRect(41, 90, 52, 20));
         deviceIDLabel->setFont(font3);
         deviceID = new QLineEdit(deviceWidget);
-        deviceID->setObjectName(QString::fromUtf8("deviceID"));
+        deviceID->setObjectName(QStringLiteral("deviceID"));
         deviceID->setGeometry(QRect(100, 90, 116, 20));
         deviceID->setFont(font4);
         roomLabel = new QLabel(deviceWidget);
-        roomLabel->setObjectName(QString::fromUtf8("roomLabel"));
+        roomLabel->setObjectName(QStringLiteral("roomLabel"));
         roomLabel->setGeometry(QRect(41, 115, 34, 20));
         roomLabel->setFont(font3);
         deviceRoomSelect = new QComboBox(deviceWidget);
-        deviceRoomSelect->setObjectName(QString::fromUtf8("deviceRoomSelect"));
+        deviceRoomSelect->setObjectName(QStringLiteral("deviceRoomSelect"));
         deviceRoomSelect->setEnabled(true);
         deviceRoomSelect->setGeometry(QRect(100, 115, 85, 20));
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -273,19 +272,19 @@ public:
         deviceRoomSelect->setMinimumSize(QSize(69, 0));
         deviceRoomSelect->setFont(font4);
         statusLabel = new QLabel(deviceWidget);
-        statusLabel->setObjectName(QString::fromUtf8("statusLabel"));
+        statusLabel->setObjectName(QStringLiteral("statusLabel"));
         statusLabel->setGeometry(QRect(41, 165, 35, 20));
         statusLabel->setFont(font3);
         deviceStatusSelect = new QComboBox(deviceWidget);
-        deviceStatusSelect->setObjectName(QString::fromUtf8("deviceStatusSelect"));
+        deviceStatusSelect->setObjectName(QStringLiteral("deviceStatusSelect"));
         deviceStatusSelect->setGeometry(QRect(100, 165, 60, 20));
         deviceStatusSelect->setFont(font4);
         valueLabel = new QLabel(deviceWidget);
-        valueLabel->setObjectName(QString::fromUtf8("valueLabel"));
+        valueLabel->setObjectName(QStringLiteral("valueLabel"));
         valueLabel->setGeometry(QRect(41, 190, 50, 20));
         valueLabel->setFont(font3);
         deviceValue = new QLineEdit(deviceWidget);
-        deviceValue->setObjectName(QString::fromUtf8("deviceValue"));
+        deviceValue->setObjectName(QStringLiteral("deviceValue"));
         deviceValue->setGeometry(QRect(100, 190, 69, 20));
         deviceIDLabel->raise();
         deviceID->raise();
@@ -304,7 +303,7 @@ public:
         newDevice->raise();
         deviceTypeLabel->raise();
         deviceTypeSelect = new QComboBox(setupTab);
-        deviceTypeSelect->setObjectName(QString::fromUtf8("deviceTypeSelect"));
+        deviceTypeSelect->setObjectName(QStringLiteral("deviceTypeSelect"));
         deviceTypeSelect->setEnabled(true);
         deviceTypeSelect->setGeometry(QRect(390, 140, 85, 20));
         sizePolicy.setHeightForWidth(deviceTypeSelect->sizePolicy().hasHeightForWidth());
@@ -313,15 +312,15 @@ public:
         deviceTypeSelect->setFont(font4);
         setupMonitorTabs->addTab(setupTab, QString());
         monitorTab = new QWidget();
-        monitorTab->setObjectName(QString::fromUtf8("monitorTab"));
+        monitorTab->setObjectName(QStringLiteral("monitorTab"));
         updatedWindow = new QTextBrowser(monitorTab);
-        updatedWindow->setObjectName(QString::fromUtf8("updatedWindow"));
+        updatedWindow->setObjectName(QStringLiteral("updatedWindow"));
         updatedWindow->setGeometry(QRect(10, 30, 551, 192));
         label = new QLabel(monitorTab);
-        label->setObjectName(QString::fromUtf8("label"));
+        label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(10, 10, 131, 16));
         QFont font5;
-        font5.setFamily(QString::fromUtf8("Gisha"));
+        font5.setFamily(QStringLiteral("Gisha"));
         font5.setPointSize(11);
         label->setFont(font5);
         setupMonitorTabs->addTab(monitorTab, QString());
@@ -345,31 +344,31 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
-        actionSetup->setText(QApplication::translate("MainWindow", "Setup", 0, QApplication::UnicodeUTF8));
-        actionMonitor->setText(QApplication::translate("MainWindow", "Monitor", 0, QApplication::UnicodeUTF8));
-        roomsLabel->setText(QApplication::translate("MainWindow", "Rooms", 0, QApplication::UnicodeUTF8));
-        newRoomButton->setText(QApplication::translate("MainWindow", "New Room", 0, QApplication::UnicodeUTF8));
-        saveRoom->setText(QApplication::translate("MainWindow", "Save Room", 0, QApplication::UnicodeUTF8));
-        removeRoom->setText(QApplication::translate("MainWindow", "Remove Room", 0, QApplication::UnicodeUTF8));
-        roomNameLabel->setText(QApplication::translate("MainWindow", "Name:", 0, QApplication::UnicodeUTF8));
-        roomSelectLabel->setText(QApplication::translate("MainWindow", "Room Select", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "On", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWindow", "Off", 0, QApplication::UnicodeUTF8));
-        deviceLabel->setText(QApplication::translate("MainWindow", "Devices", 0, QApplication::UnicodeUTF8));
-        deviceSelectLabel->setText(QApplication::translate("MainWindow", "Device Select", 0, QApplication::UnicodeUTF8));
-        newDevice->setText(QApplication::translate("MainWindow", "New Device", 0, QApplication::UnicodeUTF8));
-        deviceSaveButton->setText(QApplication::translate("MainWindow", "Save Device", 0, QApplication::UnicodeUTF8));
-        deviceRemoveButton->setText(QApplication::translate("MainWindow", "Remove Device", 0, QApplication::UnicodeUTF8));
-        deviceNameLabel->setText(QApplication::translate("MainWindow", "Name:", 0, QApplication::UnicodeUTF8));
-        deviceTypeLabel->setText(QApplication::translate("MainWindow", "Type:", 0, QApplication::UnicodeUTF8));
-        deviceIDLabel->setText(QApplication::translate("MainWindow", "Device ID:", 0, QApplication::UnicodeUTF8));
-        roomLabel->setText(QApplication::translate("MainWindow", "Room:", 0, QApplication::UnicodeUTF8));
-        statusLabel->setText(QApplication::translate("MainWindow", "Status:", 0, QApplication::UnicodeUTF8));
-        valueLabel->setText(QApplication::translate("MainWindow", "Set Value:", 0, QApplication::UnicodeUTF8));
-        setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(setupTab), QApplication::translate("MainWindow", "Setup", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "Last Updated:", 0, QApplication::UnicodeUTF8));
-        setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(monitorTab), QApplication::translate("MainWindow", "Monitor", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        actionSetup->setText(QApplication::translate("MainWindow", "Setup", 0));
+        actionMonitor->setText(QApplication::translate("MainWindow", "Monitor", 0));
+        roomsLabel->setText(QApplication::translate("MainWindow", "Rooms", 0));
+        newRoomButton->setText(QApplication::translate("MainWindow", "New Room", 0));
+        saveRoom->setText(QApplication::translate("MainWindow", "Save Room", 0));
+        removeRoom->setText(QApplication::translate("MainWindow", "Remove Room", 0));
+        roomNameLabel->setText(QApplication::translate("MainWindow", "Name:", 0));
+        roomSelectLabel->setText(QApplication::translate("MainWindow", "Room Select", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "On", 0));
+        pushButton_2->setText(QApplication::translate("MainWindow", "Off", 0));
+        deviceLabel->setText(QApplication::translate("MainWindow", "Devices", 0));
+        deviceSelectLabel->setText(QApplication::translate("MainWindow", "Device Select", 0));
+        newDevice->setText(QApplication::translate("MainWindow", "New Device", 0));
+        deviceSaveButton->setText(QApplication::translate("MainWindow", "Save Device", 0));
+        deviceRemoveButton->setText(QApplication::translate("MainWindow", "Remove Device", 0));
+        deviceNameLabel->setText(QApplication::translate("MainWindow", "Name:", 0));
+        deviceTypeLabel->setText(QApplication::translate("MainWindow", "Type:", 0));
+        deviceIDLabel->setText(QApplication::translate("MainWindow", "Device ID:", 0));
+        roomLabel->setText(QApplication::translate("MainWindow", "Room:", 0));
+        statusLabel->setText(QApplication::translate("MainWindow", "Status:", 0));
+        valueLabel->setText(QApplication::translate("MainWindow", "Set Value:", 0));
+        setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(setupTab), QApplication::translate("MainWindow", "Setup", 0));
+        label->setText(QApplication::translate("MainWindow", "Last Updated:", 0));
+        setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(monitorTab), QApplication::translate("MainWindow", "Monitor", 0));
     } // retranslateUi
 
 };
