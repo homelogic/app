@@ -1,0 +1,153 @@
+INSTEON Serial Command list
+
+GETTING UPDATE STATUS
+02 62 1D E9 4B 05 19 00
+02 62 XX XX XX 05 19 00/FF
+	02 - Start Message
+	62 - Standard Message
+	XX XX XX - Dev ID
+	05 - Dev Cat: Equates to Serial PLM
+	19 - Status Update
+	00/FF - On or Off, doesn't matter. 
+
+PLM MODULE
+
+Address: 1E.4C.08
+
+RF MODULE
+
+Address: 1F.45.C4
+
+LIGHT SWITCH
+
+Address: 1D.E9.4B
+
+THERMOSTAT
+
+Address: Look on device
+
+- Turn light on
+
+02 62 1D E9 4B 15 11 FF
+
+- Turn light off
+
+02 62 1D E9 4B 15 13 00
+
+
+DOOR LOCK
+
+- Lock door
+
+02 62 1F 45 C4 0F 11 FF
+
+- Unlock door
+
+02 62 1F 45 C4 0F 11 00
+
+
+THERMOSTAT
+
+- Get ambient temp
+
+- 02 62 XX XX XX 0F 6B 03
+
+04 - Heat ON
+05 - Cool ON
+06 - Auto ON
+07 - Fan ON
+08 - Fan OFF
+09 - All OFF
+0A - Program heat
+0B - Program cool
+0C - Program auto
+
+The above message should stay the same, only the last byte should change.
+*Also the flag byte (0F in the above message) may or may not be correct, the 
+charts don't say what the flag byte should be, but for typical power line messages
+the flag was 05 as in the light switch and the door lock is 0F. Since the thermostat
+uses RF like the door lock, I think 0F is the best place to start*
+
+
+THERMOSTAT
+
+Address: 1E.0E.1D
+
+
+
+* Commands *
+
+
+- Turn light on
+
+02 62 1D E9 4B 11 05 FF
+
+- Turn light off
+
+02 62 1D E9 4B 11 05 00
+
+
+DOOR LOCK
+
+- Lock door
+
+02 62 1F 45 C4 0F 11 FF
+
+- Unlock door
+
+02 62 1F 45 C4 0F 11 00
+
+
+THERMOSTAT
+
+- Get current mode
+
+02 62 1E 0E 1D 05 6B 02
+
+- Temp UP 1 degree * the 02 byte determines increment, take 02/2 = 1 degree, for 2 degrees 04/2 = 2 degrees *
+
+02 62 1E 0E 1D 1F 68 02 00 00 00 00 00 00 00 00 00 00 00 00 00 96
+
+- Temp DOWN 1 degree  * the 02 byte determines increment, take 02/2 = 1 degree, for 2 degrees 04/2 = 2 degrees *
+
+02 62 1E 0E 1D 1F 69 02 00 00 00 00 00 00 00 00 00 00 00 00 00 95
+
+- Get ambient temp * divide last byte sent back by 2 *
+
+02 62 1E 0E 1D 1F 6B 03 00 00 00 00 00 00 00 00 00 00 00 00 00 92
+
+- Heat on
+
+02 62 1E 0E 1D 1F 6B 04 00 00 00 00 00 00 00 00 00 00 00 00 00 91
+
+- Cool on
+
+02 62 1E 0E 1D 1F 6B 05 00 00 00 00 00 00 00 00 00 00 00 00 00 90
+
+- Auto on
+
+02 62 1E 0E 1D 1F 6B 06 00 00 00 00 00 00 00 00 00 00 00 00 00 8F
+
+- Fan on
+
+02 62 1E 0E 1D 1F 6B 07 00 00 00 00 00 00 00 00 00 00 00 00 00 8E
+
+- Fan off
+
+02 62 1E 0E 1D 1F 6B 08 00 00 00 00 00 00 00 00 00 00 00 00 00 8D
+
+- All OFF
+
+02 62 1E 0E 1D 1F 6B 09 00 00 00 00 00 00 00 00 00 00 00 00 00 8C
+
+- Program HEAT
+
+02 62 1E 0E 1D 1F 6B 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 8B
+
+- Program COOL
+
+02 62 1E 0E 1D 1F 6B 0B 00 00 00 00 00 00 00 00 00 00 00 00 00 8A
+
+- Program AUTO
+
+02 62 1E 0E 1D 1F 6B 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 89

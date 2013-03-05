@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instructionals module="QtSerialPort">
+    <examples>
+        <example name="Blocking Master example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingmaster.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingmaster-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,master</tags>
+        </example>
+        <example name="Blocking Master example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingmaster.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingmaster-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,master</tags>
+        </example>
+        <example name="Blocking Master example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingmaster.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingmaster-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,master</tags>
+        </example>
+        <example name="Blocking Master example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingmaster.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingmaster-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,master</tags>
+        </example>
+        <example name="Blocking Slave example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingslave.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingslave-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,slave</tags>
+        </example>
+        <example name="Blocking Slave example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingslave.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingslave-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,slave</tags>
+        </example>
+        <example name="Blocking Slave example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingslave.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingslave-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,slave</tags>
+        </example>
+        <example name="Blocking Slave example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-blockingslave.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/blockingslave-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>blocking,slave</tags>
+        </example>
+        <example name="Command Line Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-cenumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/cenumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>command,line,enumerator</tags>
+        </example>
+        <example name="Command Line Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-cenumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/cenumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>command,line,enumerator</tags>
+        </example>
+        <example name="Command Line Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-cenumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/cenumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>command,line,enumerator</tags>
+        </example>
+        <example name="Command Line Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-cenumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/cenumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>command,line,enumerator</tags>
+        </example>
+        <example name="Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-enumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/enumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>enumerator</tags>
+        </example>
+        <example name="Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-enumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/enumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>enumerator</tags>
+        </example>
+        <example name="Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-enumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/enumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>enumerator</tags>
+        </example>
+        <example name="Enumerator example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-enumerator.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/enumerator-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>enumerator</tags>
+        </example>
+        <example name="Terminal example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-terminal.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/terminal-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>terminal</tags>
+        </example>
+        <example name="Terminal example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-terminal.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/terminal-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>terminal</tags>
+        </example>
+        <example name="Terminal example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-terminal.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/terminal-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>terminal</tags>
+        </example>
+        <example name="Terminal example" docUrl="qthelp://com.qt-project.qtserialport.510/qdoc/examples-terminal.html" imageUrl="qthelp://com.qt-project.qtserialport.510/qdoc/images/terminal-example.png">
+            <description><![CDATA[No description available]]></description>
+            <tags>terminal</tags>
+        </example>
+    </examples>
+</instructionals>

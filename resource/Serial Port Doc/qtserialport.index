@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="Qt Serial Port Documentation" version="">
+    <namespace access="public" threadsafety="unspecified" status="commendable" name="" href="" location="">
+        <page access="public" status="commendable" name="examples.html" href="collision-examples.html" title="Name Collision: examples.html" fulltitle="Name Collision: examples.html" subtitle="" location="">
+            <page access="public" status="commendable" name="examples.html" href="examples.html" subtype="page" title="Examples" fulltitle="Examples" subtitle="" location="examples.qdoc" module="QtSerialPort"/>
+            <page access="public" status="commendable" name="examples.html" href="examples.html" subtype="page" title="Examples" fulltitle="Examples" subtitle="" location="examples.qdoc" module="QtSerialPort"/>
+            <page access="public" status="commendable" name="examples.html" href="examples.html" subtype="page" title="Examples" fulltitle="Examples" subtitle="" location="examples.qdoc" module="QtSerialPort"/>
+        </page>
+        <page access="public" status="commendable" name="examples/blockingmaster" href="examples-blockingmaster.html" subtype="example" title="Blocking Master example" fulltitle="Blocking Master example" subtitle="" location="blockingmaster.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/blockingslave" href="examples-blockingslave.html" subtype="example" title="Blocking Slave example" fulltitle="Blocking Slave example" subtitle="" location="blockingslave.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/cenumerator" href="examples-cenumerator.html" subtype="example" title="Command Line Enumerator example" fulltitle="Command Line Enumerator example" subtitle="" location="cenumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/enumerator" href="examples-enumerator.html" subtype="example" title="Enumerator example" fulltitle="Enumerator example" subtitle="" location="enumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/terminal" href="examples-terminal.html" subtype="example" title="Terminal example" fulltitle="Terminal example" subtitle="" location="terminal.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/blockingmaster" href="examples-blockingmaster.html" subtype="example" title="Blocking Master example" fulltitle="Blocking Master example" subtitle="" location="blockingmaster.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/blockingslave" href="examples-blockingslave.html" subtype="example" title="Blocking Slave example" fulltitle="Blocking Slave example" subtitle="" location="blockingslave.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/cenumerator" href="examples-cenumerator.html" subtype="example" title="Command Line Enumerator example" fulltitle="Command Line Enumerator example" subtitle="" location="cenumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/enumerator" href="examples-enumerator.html" subtype="example" title="Enumerator example" fulltitle="Enumerator example" subtitle="" location="enumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/terminal" href="examples-terminal.html" subtype="example" title="Terminal example" fulltitle="Terminal example" subtitle="" location="terminal.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/blockingmaster" href="examples-blockingmaster.html" subtype="example" title="Blocking Master example" fulltitle="Blocking Master example" subtitle="" location="blockingmaster.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/blockingslave" href="examples-blockingslave.html" subtype="example" title="Blocking Slave example" fulltitle="Blocking Slave example" subtitle="" location="blockingslave.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="build.html" href="build.html" subtype="page" title="Building and usage" fulltitle="Building and usage" subtitle="" location="build.qdoc" module="QtSerialPort">
+            <contents name="building" title="Building" level="1"/>
+        </page>
+        <page access="public" status="commendable" name="examples/cenumerator" href="examples-cenumerator.html" subtype="example" title="Command Line Enumerator example" fulltitle="Command Line Enumerator example" subtitle="" location="cenumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/blockingmaster" href="examples-blockingmaster.html" subtype="example" title="Blocking Master example" fulltitle="Blocking Master example" subtitle="" location="blockingmaster.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/blockingslave" href="examples-blockingslave.html" subtype="example" title="Blocking Slave example" fulltitle="Blocking Slave example" subtitle="" location="blockingslave.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/cenumerator" href="examples-cenumerator.html" subtype="example" title="Command Line Enumerator example" fulltitle="Command Line Enumerator example" subtitle="" location="cenumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/enumerator" href="examples-enumerator.html" subtype="example" title="Enumerator example" fulltitle="Enumerator example" subtitle="" location="enumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/terminal" href="examples-terminal.html" subtype="example" title="Terminal example" fulltitle="Terminal example" subtitle="" location="terminal.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="examples/enumerator" href="examples-enumerator.html" subtype="example" title="Enumerator example" fulltitle="Enumerator example" subtitle="" location="enumerator.qdoc" module="QtSerialPort"/>
+        <page access="public" status="commendable" name="getsrc.html" href="getsrc.html" subtype="page" title="Get source" fulltitle="Get source" subtitle="" location="getsrc.qdoc" module="QtSerialPort">
+            <contents name="users" title="Users" level="1"/>
+            <contents name="developers" title="Developers" level="1"/>
+        </page>
+        <page access="public" status="commendable" name="index.html" href="index.html" subtype="page" title="Qt Serial Port Reference Documentation" fulltitle="Qt Serial Port Reference Documentation" subtitle="" location="index.qdoc" module="QtSerialPort">
+            <contents name="c-classes" title="C++ Classes" level="1"/>
+        </page>
+        <page access="public" status="commendable" name="intro.html" href="intro.html" subtype="page" title="Introduction" fulltitle="Introduction" subtitle="" location="intro.qdoc" module="QtSerialPort">
+            <contents name="history" title="History" level="1"/>
+            <contents name="supported-platforms" title="Supported platforms" level="1"/>
+        </page>
+        <page access="public" status="commendable" name="examples/terminal" href="examples-terminal.html" subtype="example" title="Terminal example" fulltitle="Terminal example" subtitle="" location="terminal.qdoc" module="QtSerialPort"/>
+    </namespace>
+</INDEX>

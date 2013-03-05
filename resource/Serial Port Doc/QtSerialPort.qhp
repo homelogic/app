@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>com.qt-project.qtserialport.510</namespace>
+    <virtualFolder>qdoc</virtualFolder>
+    <filterSection>
+        <toc>
+            <section ref="index.html" title="Qt Serial Port Reference Documentation">
+                <section ref="" title="Classes"/>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="Blocking Master example" id="Blocking Master example" ref="examples-blockingmaster.html"/>
+            <keyword name="Blocking Slave example" id="Blocking Slave example" ref="examples-blockingslave.html"/>
+            <keyword name="Building and usage" id="Building and usage" ref="build.html"/>
+            <keyword name="Command Line Enumerator example" id="Command Line Enumerator example" ref="examples-cenumerator.html"/>
+            <keyword name="Enumerator example" id="Enumerator example" ref="examples-enumerator.html"/>
+            <keyword name="Get source" id="Get source" ref="getsrc.html"/>
+            <keyword name="Introduction" id="Introduction" ref="intro.html"/>
+            <keyword name="Name Collision: examples.html" id="Name Collision: examples.html" ref="collision-examples.html"/>
+            <keyword name="examples.html" id="examples.html::examples.html" ref="examples.html"/>
+            <keyword name="Qt Serial Port Reference Documentation" id="Qt Serial Port Reference Documentation" ref="index.html"/>
+            <keyword name="Terminal example" id="Terminal example" ref="examples-terminal.html"/>
+        </keywords>
+        <files>
+            <file>examples-enumerator.html</file>
+            <file>index.html</file>
+            <file>examples-blockingmaster.html</file>
+            <file>images/blockingmaster-example.png</file>
+            <file>getsrc.html</file>
+            <file>examples-cenumerator.html</file>
+            <file>build.html</file>
+            <file>examples-blockingslave.html</file>
+            <file>images/cenumerator-example.png</file>
+            <file>intro.html</file>
+            <file>examples-terminal.html</file>
+            <file>images/enumerator-example.png</file>
+            <file>examples.html</file>
+            <file>images/blockingslave-example.png</file>
+            <file>collision-examples.html</file>
+            <file>images/terminal-example.png</file>
+            <file>index.html</file>
+            <file>images/blockingmaster-example.png</file>
+            <file>style/style.css</file>
+            <file>images/cenumerator-example.png</file>
+            <file>images/enumerator-example.png</file>
+            <file>images/blockingslave-example.png</file>
+            <file>images/terminal-example.png</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

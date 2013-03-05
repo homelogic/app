@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- build.qdoc -->
+  <title>QtSerialPort : Building and usage</title>
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+</head>
+ <div class="header">
+   <div id="nav-logo">
+     <a href="index.html">Qt Serial Port Reference</a>   </div>
+ </div>
+  <link rel="prev" href="getsrc.html" />
+  <link rel="next" href="examples.html" />
+<p class="naviNextPrevious headerNavi">
+<a class="prevPage" href="getsrc.html">Get source</a>
+<a class="nextPage" href="examples.html">Examples</a>
+</p><p/>
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#building">Building</a></li>
+</ul>
+</div>
+<h1 class="title">Building and usage</h1>
+<span class="subtitle"></span>
+<!-- $$$build.html-description -->
+<div class="descr"> <a name="details"></a>
+<a name="building"></a>
+<h2>Building</h2>
+<p>Make sure that when you build Qt, that you use the -developer-build option, and do not do a <tt>make install</tt> as root. The same branch can be used for building with Qt4 and Qt5.</p>
+<p>Instructions for building against Qt4 are fundamentally the same as for Qt5. See the information provided below what needs to be done after getting the source by cloning the repository:</p>
+<pre class="cpp">$ cd qtserialport
+$ qmake
+$ make (Unix) <span class="keyword">or</span> jom<span class="operator">/</span>nmake (Windows)</pre>
+<p>Once having successfully built, the examples can be run to see the intended functionality provided by the module.</p>
+</div>
+<!-- @@@build.html -->
+<p class="naviNextPrevious footerNavi">
+<a class="prevPage" href="getsrc.html">Get source</a>
+<a class="nextPage" href="examples.html">Examples</a>
+</p>
+</body>
+</html>

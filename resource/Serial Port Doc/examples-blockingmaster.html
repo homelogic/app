@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- blockingmaster.qdoc -->
+  <title>QtSerialPort : Blocking Master example</title>
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+</head>
+ <div class="header">
+   <div id="nav-logo">
+     <a href="index.html">Qt Serial Port Reference</a>   </div>
+ </div>
+<h1 class="title">Blocking Master example</h1>
+<span class="subtitle"></span>
+<!-- $$$examples/blockingmaster-description -->
+<div class="descr"> <a name="details"></a>
+<p>The Blocking Master example shows how to create a application for a serial interface using QSerialPort's synchronous API in a non-GUI thread.</p>
+<p class="centerAlign"><img src="images/blockingmaster-example.png" alt="Screenshot of the Blocking Master example" /></p><p>QSerialPort supports two general programming approaches:</p>
+<ul>
+<li><i>The asynchronous (non-blocking) approach.</i> Operations are scheduled and performed when the control returns to Qt's event loop. QSerialPort emits a signal when the operation is finished. For example, QSerialPort::write() returns immediately. When the data is sent to the serial port, QSerialPort emits bytesWritten().</li>
+<li><i>The synchronous (blocking) approach.</i> In non-GUI and multithreaded applications, the <tt>waitFor..&#x2e;()</tt> functions can be called (i.e&#x2e; QSerialPort::waitReadyRead()) to suspend the calling thread until the operation has completed.</li>
+</ul>
+<p>In this example, the synchronous approach is demonstrated. The <a href="examples-terminal.html">Simple Terminal</a> example illustrates the asynchronous approach.</p>
+<p>The purpose of this example is to demonstrate a pattern that you can use to simplify your serial programming code, without losing responsiveness in your user interface. Use of Qt's blocking serial programming API often leads to simpler code, but because of its blocking behavior, it should only be used in non-GUI threads to prevent the user interface from freezing. But contrary to what many think, using threads with QThread does not necessarily add unmanagable complexity to your application.</p>
+<p>This application is a Master, that demonstrate the work paired with Slave application <a href="examples-blockingslave.html">Blocking Slave Example</a>.</p>
+<p>The Master application is initiate the transfer request via serial port to the Slave application and wait for a response from it.</p>
+<p>We will start with the MasterThread class, which handles the serial programming code.</p>
+<pre class="cpp"></pre>
+<p>MasterThread is a QThread subclass that provides an API for scheduling requests to Slave, and it has signals for delivering responses and reporting errors. You can call transaction() to startup new master transaction with desired request data and other parameters, and the result is delivered by the response() signal. If any error occurs, the error() or timeout() signals is emitted.</p>
+<p>It's important to notice that transaction() is called from the main, GUI thread, but the request data and other parameters will be accessed from MasterThread's thread. Because we will be reading and writing MasterThread's data members from different threads concurrently, we use QMutex to synchronize access.</p>
+<pre class="cpp"></pre>
+<p>The transaction() function stores the serial port name, timeout and request data, and we lock the mutex with QMutexLocker to protect this data. We then start the thread, unless it is already running. We will come back to the QWaitCondition::wakeOne() call later.</p>
+<pre class="cpp"></pre>
+<p>In the run() function, we start by acquiring the mutex lock, fetching the serial port name, timeout and request data from the member data, and then releasing the lock again. The case that we are protecting ourselves against is that <tt>transaction()</tt> could be called at the same time as we are fetching this data. QString is reentrant but <i>not</i> thread-safe, and we must also avoid the unlikely risk of reading the serial port name from one request, and timeout or request data of another. And as you might have guessed, MasterThread can only handle one request at a time.</p>
+<p>The QSerialPort object we construct on stack into run() function before loop enter:</p>
+<pre class="cpp"></pre>
+<p>This allows us once to create an object, while running loop, and also means that all the methods of the object will be executed in the context of the run() thread.</p>
+<p>In the loop, we check for changed or not the name of serial port for the current transaction. And if the name is changed then re-open and re-configure the serial port.</p>
+<pre class="cpp"></pre>
+<p>The loop will continue creating request data, write to serial port and wait until all data is transferred.</p>
+<pre class="cpp"></pre>
+<p><b>Warning:</b> The method waitForBytesWritten() should be used after each write() call for the blocking approach, because it processes all the I/O routines instead of Qt event-loop.</p>
+<p>The timeout() signal is emitted if error occurs when transferring data.</p>
+<pre class="cpp"></pre>
+<p>After a successful request, we start wait until response and try read it.</p>
+<pre class="cpp"></pre>
+<p><b>Warning:</b> The method waitForReadyRead() should be used before each read() call for the blocking approach, because it processes all the I/O routines instead of Qt event-loop.</p>
+<p>The timeout() signal is emitted if error occurs when receiving data.</p>
+<pre class="cpp"></pre>
+<p>After a successful transaction is emitted response() signal containing the data received from the Slave application:</p>
+<pre class="cpp"></pre>
+<p>Next, the thread goes to sleep until the next transaction is appear. On waking, the thread re-reads the new data of members and run loop from the beginning.</p>
+<pre class="cpp"></pre>
+</div>
+<p><b>See also </b>Simple Terminal Example and <a href="examples-blockingslave.html">Blocking Slave Example</a>.</p>
+<!-- @@@examples/blockingmaster -->
+</body>
+</html>
