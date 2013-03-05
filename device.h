@@ -1,12 +1,18 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include <QString>
+
 #include <QDateTime>
+#include <QThread>
 #include <QtSerialPort/qserialport.h>
 
-class Device
+#include "serialthread.h"
+
+
+class Device : public QThread
 {
+    Q_OBJECT
+
 public:
     /* Default constructor anticipates the following format:
       deviceID, name, type, room, value, status */
@@ -16,7 +22,6 @@ public:
     QString getDeviceID();
     QString get_PLM_ID(QList<Device *> * deviceList);
     void setDeviceID(QString devID);
-    void readWait();
     QDateTime getUpdatedTime(QString devID);
     void check_updated(QList<Device *> * deviceList);
     void currentStatus(QList<Device *> * deviceList);
@@ -33,15 +38,14 @@ public:
     void thermostat_on(QList<Device *> * deviceList, int index);
     void thermostat_off(QList<Device *> * deviceList, int index);
     void thermostat_value(QList<Device *> * deviceList, int index, int newValue);
-
-public slots:
-
     void send(QByteArray &data, bool *status);
     void send(QByteArray &data, bool *status, int *devStatus);
     void read();
-    void processTimeout();
-    void processError(const QString &error);
 
+private slots:
+    void processTimeout(const QString &timeOut);
+    void processError(const QString &error);
+    void handleResponse(const QByteArray &msg);
 
 private:
     QString name;   //name of device
@@ -55,6 +59,7 @@ private:
     QByteArray response;
     QSerialPort serial;
 
+    serialThread thread;
 };
 
 #endif // DEVICE_H

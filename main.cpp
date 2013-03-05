@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     a.addLibraryPath( a.applicationDirPath() + "/plugins");
     w.load_device_defaults();
     w.load_device_list();
-    w.timer_start();
+    w.timer_start();    
     w.show();
 
 

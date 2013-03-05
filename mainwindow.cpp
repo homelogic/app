@@ -34,11 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :
         QString s_err("The database reported an error: ");
         s_err.append(err.databaseText());
         msg.setInformativeText(s_err);
-     int ret = msg.exec();
-     if (!ret){
+        int ret = msg.exec();
+        if (!ret){
          qDebug() << "Datbase connect error message not displayed.";
-     }
+        }
     }
+
 
 }
 MainWindow::~MainWindow()
@@ -53,7 +54,7 @@ void MainWindow::timer_start(){
     timer->start(DEVICE_QUERY_WAIT);
     QTimer *statusTimer = new QTimer(this);
     connect(statusTimer, SIGNAL(timeout()), this, SLOT(check_status_timeout()));
-    statusTimer->start(CHECK_UPDATED_WAIT);
+    //statusTimer->start(CHECK_UPDATED_WAIT);
 }
 
 void MainWindow::device_timer_timeout(){

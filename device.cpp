@@ -1,4 +1,5 @@
 #include "device.h"
+
 #include <Qstring>
 #include <QDebug>
 #include <QList>
@@ -6,6 +7,9 @@
 #include <QtSql/QtSql>
 #include <QtSerialPort/qserialport.h>
 
+
+
+QT_USE_NAMESPACE
 
 /* Default constructor anticipates the following format:
   deviceID, name, type, room, value, status */
@@ -19,9 +23,12 @@ Device::Device(QString devID, QString devName, QString devType, int parentRoom, 
     status = devStatus;
     lastUpdated = updateTime;
 
+
 }
 Device::Device(){
-
+    QObject::connect(&thread, SIGNAL(sendResponse(QByteArray)), this, SLOT(handleResponse(QByteArray)));
+    QObject::connect(&thread, SIGNAL(error(QString)), this, SLOT(processError(QString)));
+    QObject::connect(&thread, SIGNAL(timeout(QString)), this, SLOT(processTimeout(QString)));
 }
 
 void Device::setDeviceID(QString devID){
@@ -46,11 +53,15 @@ void Device::open_port(){
     if (serial.portName() != "COM3") {
         serial.close();
         serial.setPortName("COM3");
-
-        if (!serial.open(QIODevice::ReadWrite)) {
-            processError(QObject::tr("Can't open %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
+        if(serial.isOpen()){
+            //do nothing
+        }
+        else{
+            if (!serial.open(QIODevice::ReadWrite)) {
+                processError(QObject::tr("Can't open %1, error code %2")
+                             .arg(serial.portName()).arg(serial.error()));
+                return;
+            }
         }
 
         if (!serial.setBaudRate(QSerialPort::Baud19200)) {
@@ -186,6 +197,7 @@ void Device::read()
     //response.clear();
 }
 
+
 void Device::processError(const QString &error)
 {
     QString status = QObject::tr("Status: Not running, %1.").arg(error);
@@ -196,8 +208,14 @@ void Device::processError(const QString &error)
     msg.exec();
 }
 
-void Device::readWait(){
-    serial.waitForReadyRead(400);
+
+void Device::processTimeout(const QString &timeOut){
+    qDebug() << "Status: Running, " << timeOut;
+}
+
+
+void Device::handleResponse(const QByteArray &msg){
+    qDebug() << "Read: " << msg.toHex();
 }
 
 
@@ -261,11 +279,11 @@ void Device::currentStatus(QList<Device *> * deviceList){
             msg[6] = 0x19;
             msg[7] = 0x00;
             msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
-            qDebug() << "Has device " << deviceList->at(i)->name << "Changed? Send: " << msg.toHex();
+            qDebug() << "Has device " << deviceList->at(i)->name << "Changed?";
             send(msg,&msgStatus, &updateStatus);
             msg.clear();
-            response.clear();
-            serial.flush();
+            //thread.setupPort("COM3",500,msg);
+
             if(devStatus!=updateStatus){
                 qDebug() << deviceList->at(i)->name << " is now: " << updateStatus;
                 updateStatus = !updateStatus;
@@ -398,6 +416,7 @@ void Device::light_on(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     send(msg,&msgStatus);
+    //thread.setupPort("COM3",500,msg);
     if(msgStatus==true){
         deviceList->at(index)->status=1;
     } else{
@@ -426,6 +445,7 @@ void Device::light_off(QList<Device *> * deviceList, int index){
     msg[7] = 0x00;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
+    //thread.setupPort("COM3",500,msg);
     send(msg,&msgStatus);
     if(msgStatus==true){
         deviceList->at(index)->status=0;
