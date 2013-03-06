@@ -1,0 +1,7 @@
+./configure -prefix /Developer/Qt/Qt5/5.0.1/ -platform macx-clang-32 -developer-build -opensource -nomake examples -nomake test -nomake webkit
+
+make -j 4
+
+ git submodule foreach --recursive "git clean -dfx"
+ 
+ make install
