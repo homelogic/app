@@ -23,12 +23,19 @@ Device::Device(QString devID, QString devName, QString devType, int parentRoom, 
     status = devStatus;
     lastUpdated = updateTime;
 
-
 }
 Device::Device(){
-    QObject::connect(&thread, SIGNAL(sendResponse(QByteArray)), this, SLOT(handleResponse(QByteArray)));
-    QObject::connect(&thread, SIGNAL(error(QString)), this, SLOT(processError(QString)));
-    QObject::connect(&thread, SIGNAL(timeout(QString)), this, SLOT(processTimeout(QString)));
+
+    serialTimer.setSingleShot(true);
+    readySend = true;
+    sent = false;
+
+    QObject::connect(&serial, SIGNAL(readyRead()),
+                     this, SLOT(handleResponse()));
+    QObject::connect(&serialTimer, SIGNAL(timeout()),
+                     this, SLOT(processTimeout()));
+    QObject::connect(this, SIGNAL(writeRequest(QByteArray)),
+                     this, SLOT(writeSerial(QByteArray)));
 }
 
 void Device::setDeviceID(QString devID){
@@ -190,13 +197,57 @@ void Device::send(QByteArray &data, bool *status)
     response.clear();
 }
 
-void Device::read()
-{
-    //response.append(serial.readLine());
-    //qDebug() << response.toHex();
-    //response.clear();
-}
 
+void Device::writeSerial(const QByteArray &msg){
+    if (serial.portName() != "COM3") {
+        serial.close();
+        serial.setPortName("COM3");
+
+        if (!serial.open(QIODevice::ReadWrite)) {
+            processError(tr("Can't open %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setBaudRate(QSerialPort::Baud19200)) {
+            processError(tr("Can't set rate 9600 baud to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setDataBits(QSerialPort::Data8)) {
+            processError(tr("Can't set 8 data bits to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setParity(QSerialPort::NoParity)) {
+            processError(tr("Can't set no patity to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setStopBits(QSerialPort::OneStop)) {
+            processError(tr("Can't set 1 stop bit to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+
+        if (!serial.setFlowControl(QSerialPort::NoFlowControl)) {
+            processError(tr("Can't set no flow control to port %1, error code %2")
+                         .arg(serial.portName()).arg(serial.error()));
+            return;
+        }
+    }
+
+    //statusLabel->setText(tr("Status: Running, connected to port %1.")
+                    //    .arg(serialPortComboBox->currentText()));
+
+    //serial.write(requestLineEdit->text().toLocal8Bit());
+    serial.write(msg);
+    serial.waitForBytesWritten(10);
+    serialTimer.start(400);
+}
 
 void Device::processError(const QString &error)
 {
@@ -209,13 +260,16 @@ void Device::processError(const QString &error)
 }
 
 
-void Device::processTimeout(const QString &timeOut){
-    qDebug() << "Status: Running, " << timeOut;
+void Device::processTimeout(){
+    qDebug() << "Read: " << response.toHex();
+    response.clear();
 }
 
 
-void Device::handleResponse(const QByteArray &msg){
-    qDebug() << "Read: " << msg.toHex();
+void Device::handleResponse(){
+    response.append(serial.readAll());
+    readySend = true;
+    sent = false;
 }
 
 
@@ -280,7 +334,19 @@ void Device::currentStatus(QList<Device *> * deviceList){
             msg[7] = 0x00;
             msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
             qDebug() << "Has device " << deviceList->at(i)->name << "Changed?";
-            send(msg,&msgStatus, &updateStatus);
+            //send(msg,&msgStatus, &updateStatus);
+            while (!sent){
+                if(readySend){
+                    emit writeRequest(msg);
+                    sent=true;
+                    readySend = false;
+                }
+                QThread::msleep(50);
+            }
+
+
+
+
             msg.clear();
             //thread.setupPort("COM3",500,msg);
 
@@ -415,8 +481,10 @@ void Device::light_on(QList<Device *> * deviceList, int index){
     msg[7] = 0xFF;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
-    send(msg,&msgStatus);
-    //thread.setupPort("COM3",500,msg);
+    //send(msg,&msgStatus);
+    //thread.setupPort("COM3",500,msg);    
+    emit writeRequest(msg);
+    msgStatus=true;
     if(msgStatus==true){
         deviceList->at(index)->status=1;
     } else{
@@ -446,7 +514,9 @@ void Device::light_off(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     //thread.setupPort("COM3",500,msg);
-    send(msg,&msgStatus);
+    //send(msg,&msgStatus);
+    emit writeRequest(msg);
+    msgStatus=true;
     if(msgStatus==true){
         deviceList->at(index)->status=0;
     } else{

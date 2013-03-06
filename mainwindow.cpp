@@ -54,7 +54,7 @@ void MainWindow::timer_start(){
     timer->start(DEVICE_QUERY_WAIT);
     QTimer *statusTimer = new QTimer(this);
     connect(statusTimer, SIGNAL(timeout()), this, SLOT(check_status_timeout()));
-    //statusTimer->start(CHECK_UPDATED_WAIT);
+    statusTimer->start(CHECK_UPDATED_WAIT);
 }
 
 void MainWindow::device_timer_timeout(){

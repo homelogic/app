@@ -3,6 +3,7 @@
 
 
 #include <QDateTime>
+#include <Qtimer>
 #include <QThread>
 #include <QtSerialPort/qserialport.h>
 
@@ -40,12 +41,15 @@ public:
     void thermostat_value(QList<Device *> * deviceList, int index, int newValue);
     void send(QByteArray &data, bool *status);
     void send(QByteArray &data, bool *status, int *devStatus);
-    void read();
 
 private slots:
-    void processTimeout(const QString &timeOut);
+    void processTimeout();
     void processError(const QString &error);
-    void handleResponse(const QByteArray &msg);
+    void handleResponse();
+    void writeSerial(const QByteArray &msg);
+
+signals:
+    void writeRequest(const QByteArray &msg);
 
 private:
     QString name;   //name of device
@@ -58,8 +62,13 @@ private:
 
     QByteArray response;
     QSerialPort serial;
+    QTimer serialTimer;
 
     serialThread thread;
+
+    bool readySend;
+    bool sent;
+
 };
 
 #endif // DEVICE_H
