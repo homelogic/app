@@ -18,12 +18,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
         mainwindow.cpp \
-    device.cpp \
-    serialthread.cpp
+    device.cpp
 
 HEADERS  += mainwindow.h \
     device.h \
-    defaults.h \
-    serialthread.h
+    defaults.h
 
 FORMS    += mainwindow.ui

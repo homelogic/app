@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[15];
-    char stringdata[323];
+    QByteArrayData data[13];
+    char stringdata[277];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -41,9 +41,7 @@ QT_MOC_LITERAL(8, 167, 19),
 QT_MOC_LITERAL(9, 187, 21),
 QT_MOC_LITERAL(10, 209, 24),
 QT_MOC_LITERAL(11, 234, 20),
-QT_MOC_LITERAL(12, 255, 20),
-QT_MOC_LITERAL(13, 276, 21),
-QT_MOC_LITERAL(14, 298, 23)
+QT_MOC_LITERAL(12, 255, 20)
     },
     "MainWindow\0on_deviceSelect_currentIndexChanged\0"
     "\0index\0on_newDevice_clicked\0"
@@ -52,8 +50,7 @@ QT_MOC_LITERAL(14, 298, 23)
     "on_roomSelect_currentIndexChanged\0"
     "on_saveRoom_clicked\0on_removeRoom_clicked\0"
     "on_newRoomButton_clicked\0device_timer_timeout\0"
-    "check_status_timeout\0on_pushButton_clicked\0"
-    "on_pushButton_2_clicked\0"
+    "check_status_timeout\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,7 +60,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -71,23 +68,19 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   74,    2, 0x08,
-       4,    0,   77,    2, 0x08,
-       5,    0,   78,    2, 0x08,
-       6,    0,   79,    2, 0x08,
-       7,    0,   80,    2, 0x08,
-       8,    0,   81,    2, 0x08,
-       9,    0,   82,    2, 0x08,
-      10,    0,   83,    2, 0x08,
-      11,    0,   84,    2, 0x08,
-      12,    0,   85,    2, 0x08,
-      13,    0,   86,    2, 0x08,
-      14,    0,   87,    2, 0x08,
+       1,    1,   64,    2, 0x08,
+       4,    0,   67,    2, 0x08,
+       5,    0,   68,    2, 0x08,
+       6,    0,   69,    2, 0x08,
+       7,    0,   70,    2, 0x08,
+       8,    0,   71,    2, 0x08,
+       9,    0,   72,    2, 0x08,
+      10,    0,   73,    2, 0x08,
+      11,    0,   74,    2, 0x08,
+      12,    0,   75,    2, 0x08,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    3,
-    QMetaType::Void,
-    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -116,8 +109,6 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 7: _t->on_newRoomButton_clicked(); break;
         case 8: _t->device_timer_timeout(); break;
         case 9: _t->check_status_timeout(); break;
-        case 10: _t->on_pushButton_clicked(); break;
-        case 11: _t->on_pushButton_2_clicked(); break;
         default: ;
         }
     }
@@ -148,13 +139,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 12)
+        if (_id < 10)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 12;
+        _id -= 10;
     }
     return _id;
 }

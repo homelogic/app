@@ -49,9 +49,6 @@ private slots:
 
     void check_status_timeout();
 
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
-
 private:
 
     Ui::MainWindow *ui;

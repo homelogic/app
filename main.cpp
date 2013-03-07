@@ -18,17 +18,5 @@ int main(int argc, char *argv[])
     w.timer_start();    
     w.show();
 
-    QByteArray x;
-    x.resize(2);
-    x[0] = 0x01;
-    x[1] = 0x2A;
-
-    int num = 0;
-    num |= x[0];
-    num << 8;
-    num |= x[1];
-    num << 8;
-    qDebug() << "num = " << num;
-
     return a.exec();
 }

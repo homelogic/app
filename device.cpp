@@ -27,174 +27,12 @@ Device::Device(QString devID, QString devName, QString devType, int parentRoom, 
 Device::Device(){
 
     serialTimer.setSingleShot(true);
-    readySend = true;
-    sent = false;
-
     QObject::connect(&serial, SIGNAL(readyRead()),
                      this, SLOT(handleResponse()));
     QObject::connect(&serialTimer, SIGNAL(timeout()),
                      this, SLOT(processTimeout()));
     QObject::connect(this, SIGNAL(writeRequest(QByteArray)),
                      this, SLOT(writeSerial(QByteArray)));
-}
-
-void Device::setDeviceID(QString devID){
-    deviceID = devID;
-}
-
-QString Device::get_PLM_ID(QList<Device *> * deviceList){
-    int num = deviceList->size();
-    QString devID;
-    for (int i = 0; i < num; ++i){
-        if(deviceList->at(i)->type == "PLM")
-           devID = deviceList->at(i)->deviceID;
-    }
-    return devID;
-}
-
-QString Device::getDeviceID(){
-    return deviceID;
-}
-
-void Device::open_port(){
-    if (serial.portName() != "COM3") {
-        serial.close();
-        serial.setPortName("COM3");
-        if(serial.isOpen()){
-            //do nothing
-        }
-        else{
-            if (!serial.open(QIODevice::ReadWrite)) {
-                processError(QObject::tr("Can't open %1, error code %2")
-                             .arg(serial.portName()).arg(serial.error()));
-                return;
-            }
-        }
-
-        if (!serial.setBaudRate(QSerialPort::Baud19200)) {
-            processError(QObject::tr("Can't set rate 19200 baud to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setDataBits(QSerialPort::Data8)) {
-            processError(QObject::tr("Can't set 8 data bits to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setParity(QSerialPort::NoParity)) {
-            processError(QObject::tr("Can't set no patity to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setStopBits(QSerialPort::OneStop)) {
-            processError(QObject::tr("Can't set 1 stop bit to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setFlowControl(QSerialPort::NoFlowControl)) {
-            processError(QObject::tr("Can't set no flow control to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-    }
-}
-
-void Device::send(QByteArray &data, bool *status, int *devStatus){
-    open_port();
-    *status = true;
-
-    int flagIndex;
-    int success = 0;
-    int timeout = 0;
-    QString serialStatus;
-    serialStatus = QObject::tr("Status: Running, connected to port %1.")
-            .arg("COM3");
-    qDebug() << serialStatus;
-
-    qDebug() << "Size of Data to write: " << data.length();
-    /* Do not quit trying to send message until you receive success
-     * acknowledgement. Success ACK = 0x06
-     * if the message is not sent successfully in 6 tries, quit */
-    qDebug() << "Trying to write: " << data.toHex();
-    while(success==0 && timeout <= 6){
-        serial.write(data);
-        serial.flush();
-        serial.waitForReadyRead(600);
-        response = serial.read(20);
-        flagIndex = response.indexOf(0x21);
-        if( response.endsWith(0x15)){ //Negative Acknowledgement
-            qDebug() << "Error - NACK: " <<response.toHex();
-            timeout++;
-        }
-        else if( response[8]==0x06 && flagIndex != -1 ){ //Positive ACK received
-            qDebug() << "Successful Send: " << response.toHex();
-            success=1;
-            qDebug() << "Found 21 @ " << response.indexOf(0x21);
-            if( (response.endsWith(0xFF))  ){
-                *devStatus = 1;
-                qDebug() << "Light is currently ON";
-            }
-            else if( (response.endsWith(QByteArray(0x00)))  ){
-                *devStatus = 0;
-                qDebug() << "Light is currently OFF";
-            }
-            else{
-                //qDebug() << "Unkown status";
-            }
-        }else{
-            qDebug() << "Error - Received: " <<response.toHex();
-            timeout++;
-        }
-    }
-    if(success==0){
-        *status = false;
-         //qDebug() << "Error - Received: " <<response.toHex();
-    }
-    response.clear();
-
-}
-
-void Device::send(QByteArray &data, bool *status)
-{
-    open_port();
-    *status = true;
-    int success = 0;
-    int timeout = 0;
-    QString serialStatus;
-    serialStatus = QObject::tr("Status: Running, connected to port %1.")
-            .arg("COM3");
-    qDebug() << serialStatus;
-
-    qDebug() << "Size of Data to write: " << data.length();
-
-    /* Do not quit trying to send message until you receive success
-     * acknowledgement. Success ACK = 0x06
-     * if the message is not sent successfully in 6 tries, quit */
-    while(success==0 && timeout <= 6){
-        response.clear();
-        serial.flush();
-        qDebug() << "Trying to write: " << data.toHex();
-        serial.write(data);
-        serial.flush();
-        serial.waitForReadyRead(400);
-        response = serial.readAll();
-        if( (response.endsWith(0x06)) || (response[9]==data[0] && response[10]==data[1])){ //Positive ACK received
-            qDebug() << "Successful Send: " << response.toHex();
-            success=1;
-        }else{
-            qDebug() << "Error - Received: " <<response.toHex();
-            timeout++;
-        }
-    }
-
-    if(success==0){
-        *status = false;
-    }
-    response.clear();
 }
 
 
@@ -210,7 +48,7 @@ void Device::writeSerial(const QByteArray &msg){
         }
 
         if (!serial.setBaudRate(QSerialPort::Baud19200)) {
-            processError(tr("Can't set rate 9600 baud to port %1, error code %2")
+            processError(tr("Can't set rate 19200 baud to port %1, error code %2")
                          .arg(serial.portName()).arg(serial.error()));
             return;
         }
@@ -239,13 +77,9 @@ void Device::writeSerial(const QByteArray &msg){
             return;
         }
     }
-
-    //statusLabel->setText(tr("Status: Running, connected to port %1.")
-                    //    .arg(serialPortComboBox->currentText()));
-
-    //serial.write(requestLineEdit->text().toLocal8Bit());
-    serial.write(msg);
-    serial.waitForBytesWritten(10);
+    qDebug() << "Message written";
+    this->msgRequest = msg;
+    serial.write(msgRequest);
     serialTimer.start(400);
 }
 
@@ -262,14 +96,17 @@ void Device::processError(const QString &error)
 
 void Device::processTimeout(){
     qDebug() << "Read: " << response.toHex();
+    int msgLength = this->msgRequest.length();
+    if(response.at(msgLength)!=0x06){
+        qDebug() << "Error, resend.";
+        emit writeRequest(msgRequest);
+    }
     response.clear();
 }
 
 
 void Device::handleResponse(){
-    response.append(serial.readAll());
-    readySend = true;
-    sent = false;
+    response.append(serial.readAll());  
 }
 
 
@@ -307,7 +144,6 @@ void Device::check_updated(QList<Device *> * deviceList)
                 deviceList->at(i)->lastUpdated = date;
             }
         }
-        //qDebug() << deviceList->at(i)->deviceID << deviceList->at(i)->name << deviceList->at(i)->lastUpdated;
     }
 }
 
@@ -321,7 +157,6 @@ void Device::currentStatus(QList<Device *> * deviceList){
             devStatus = deviceList->at(i)->status;
             devID = deviceList->at(i)->deviceID;
             QByteArray msg;
-            bool msgStatus;
             msg.resize(8);
 
             msg[0] = 0x02;
@@ -334,21 +169,8 @@ void Device::currentStatus(QList<Device *> * deviceList){
             msg[7] = 0x00;
             msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
             qDebug() << "Has device " << deviceList->at(i)->name << "Changed?";
-            //send(msg,&msgStatus, &updateStatus);
-            while (!sent){
-                if(readySend){
-                    emit writeRequest(msg);
-                    sent=true;
-                    readySend = false;
-                }
-                QThread::msleep(50);
-            }
 
-
-
-
-            msg.clear();
-            //thread.setupPort("COM3",500,msg);
+            emit writeRequest(msg);
 
             if(devStatus!=updateStatus){
                 qDebug() << deviceList->at(i)->name << " is now: " << updateStatus;
@@ -380,15 +202,12 @@ void Device::statusChanged(QList<Device *> * deviceList, int index){
 
         /* Determine Action to take */
         if( devType == "Light"){
-            qDebug() << "Light Switch should be modified";
             if(devStatus != deviceList->at(index)->status){
                 switch(devStatus){
                 case 1:
-                    qDebug() << "Turn Light on";
                     light_on(deviceList,index);
                     break;
                 case 0:
-                    qDebug() << "Turn light off";
                     light_off(deviceList,index);
                     break;
                 default:
@@ -397,15 +216,12 @@ void Device::statusChanged(QList<Device *> * deviceList, int index){
                 }
             }
         } else if( devType == "Door Lock" ){
-            //qDebug() << "Door lock action";
             if(devStatus != deviceList->at(index)->status){
                 switch(devStatus){
                 case 1:
-                    //qDebug() << "Lock the door";
                     door_lock(deviceList,index);
                     break;
                 case 0:
-                    //qDebug() << "Unlock the door";
                     door_unlock(deviceList,index);
                     break;
                 default:
@@ -481,8 +297,7 @@ void Device::light_on(QList<Device *> * deviceList, int index){
     msg[7] = 0xFF;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
-    //send(msg,&msgStatus);
-    //thread.setupPort("COM3",500,msg);    
+    //send(msg,&msgStatus);   
     emit writeRequest(msg);
     msgStatus=true;
     if(msgStatus==true){
@@ -513,8 +328,6 @@ void Device::light_off(QList<Device *> * deviceList, int index){
     msg[7] = 0x00;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
-    //thread.setupPort("COM3",500,msg);
-    //send(msg,&msgStatus);
     emit writeRequest(msg);
     msgStatus=true;
     if(msgStatus==true){
@@ -543,8 +356,8 @@ void Device::door_lock(QList<Device *> * deviceList, int index){
     msg[7] = 0x00;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
-    send(msg,&msgStatus);
-
+    emit writeRequest(msg);
+    msgStatus = true;
     if(msgStatus==true){
         deviceList->at(index)->status=1;
     } else{
@@ -572,7 +385,7 @@ void Device::door_unlock(QList<Device *> * deviceList, int index){
     msg[7] = 0xFF;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
-    send(msg,&msgStatus);
+    msgStatus = true;
     if(msgStatus==true){
         deviceList->at(index)->status=0;
     } else{

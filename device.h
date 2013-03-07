@@ -20,9 +20,6 @@ public:
     Device(QString, QString, QString, int, int, int, QDateTime);
     Device();
 
-    QString getDeviceID();
-    QString get_PLM_ID(QList<Device *> * deviceList);
-    void setDeviceID(QString devID);
     QDateTime getUpdatedTime(QString devID);
     void check_updated(QList<Device *> * deviceList);
     void currentStatus(QList<Device *> * deviceList);
@@ -61,14 +58,12 @@ private:
     QDateTime lastUpdated; //Time from MySQL DB
 
     QByteArray response;
+    QByteArray msgRequest;
     QSerialPort serial;
     QTimer serialTimer;
 
-    serialThread thread;
-
     bool readySend;
     bool sent;
-
 };
 
 #endif // DEVICE_H

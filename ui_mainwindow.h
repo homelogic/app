@@ -50,8 +50,6 @@ public:
     QLabel *roomNameLabel;
     QLineEdit *roomName;
     QLabel *roomSelectLabel;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
     QWidget *deviceWidget;
     QLabel *deviceLabel;
     QLabel *deviceSelectLabel;
@@ -182,12 +180,6 @@ public:
         roomSelectLabel->setGeometry(QRect(0, 11, 271, 31));
         roomSelectLabel->setFont(font2);
         roomSelectLabel->setAlignment(Qt::AlignCenter);
-        pushButton = new QPushButton(roomsWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(40, 180, 75, 23));
-        pushButton_2 = new QPushButton(roomsWidget);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setGeometry(QRect(120, 180, 75, 23));
 
         setupLayout->addWidget(roomsWidget);
 
@@ -353,8 +345,6 @@ public:
         removeRoom->setText(QApplication::translate("MainWindow", "Remove Room", 0));
         roomNameLabel->setText(QApplication::translate("MainWindow", "Name:", 0));
         roomSelectLabel->setText(QApplication::translate("MainWindow", "Room Select", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "On", 0));
-        pushButton_2->setText(QApplication::translate("MainWindow", "Off", 0));
         deviceLabel->setText(QApplication::translate("MainWindow", "Devices", 0));
         deviceSelectLabel->setText(QApplication::translate("MainWindow", "Device Select", 0));
         newDevice->setText(QApplication::translate("MainWindow", "New Device", 0));
