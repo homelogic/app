@@ -26,7 +26,6 @@ Device::Device(QString devID, QString devName, QString devType, int parentRoom, 
 }
 Device::Device(){
 
-    serialTimer.setSingleShot(true);
     QObject::connect(&serial, SIGNAL(readyRead()),
                      this, SLOT(handleResponse()));
     QObject::connect(&serialTimer, SIGNAL(timeout()),
@@ -34,6 +33,7 @@ Device::Device(){
     QObject::connect(this, SIGNAL(writeRequest(QByteArray)),
                      this, SLOT(writeSerial(QByteArray)));
     no_data = true;
+    serialTimer.setSingleShot(true);
 }
 
 
@@ -78,13 +78,9 @@ void Device::writeSerial(const QByteArray &msg){
             return;
         }
     }
-//    qDebug() << "Message written";
-//    this->msgRequest = msg;
-//    serial.write(msgRequest);
-//    serialTimer.start(400);
+
     if(!no_data){
         msgQueue.append(msg);
-        qDebug() << "Current Queue: " << msgQueue.toHex();
     }
     else{
         serial.write(msg);
@@ -94,7 +90,7 @@ void Device::writeSerial(const QByteArray &msg){
 }
 
 
-void Device::writeNextQuery(){
+void Device::writeNextQueue(){
     int size = msgQueue.length();
     msgRequest = msgQueue.left(8);
     msgQueue = msgQueue.mid(8,(size-8));
@@ -103,37 +99,12 @@ void Device::writeNextQuery(){
     no_data=false;
 }
 
-void Device::processError(const QString &error)
-{
-    QString status = QObject::tr("Status: Not running, %1.").arg(error);
-    qDebug() << status;
-    QMessageBox msg;
-    msg.setWindowTitle("Error Opening COM Port");
-    msg.setInformativeText(status);
-    msg.exec();
-}
-
 
 void Device::processTimeout(){
-//    qDebug() << "Read: " << response.toHex();
-//    int msgLength = this->msgRequest.length();
-//    if(response.at(msgLength)!=0x06){
-//        qDebug() << "Error, resend.";
-//        emit writeRequest(msgRequest);
-//    }
-//    response.clear();
-
-
-//    qDebug() << "Timeout";
-//    response.clear();
-//    if(msgQueue.length() > 0)
-//        writeNextQuery();
-//    else
-//        no_data=true;
     qDebug() << "Timeout";
     response.clear();
     if(msgQueue.length() > 0)
-        this->writeNextQuery();
+        this->writeNextQueue();
     else
         no_data=true;
 }
@@ -159,14 +130,16 @@ void Device::handleResponse(){
     switch(state){
     case 0:
         serialTimer.start(500);
-        //Not ready - do nothing, wait for read to come in.
+        //Not ready - do nothing, wait for more bytes.
         break;
+
     case 1: //NACK
         serialTimer.stop();
-        qDebug() << "Read: " << response.toHex();
+        qDebug() << "NACK: " << response.toHex();
         response.clear();
         serial.write(msgRequest); //write again
         break;
+
     case 2: //ACK
         serialTimer.stop();
         qDebug() << "Read: " << response.toHex();
@@ -176,9 +149,11 @@ void Device::handleResponse(){
         else
             no_data=true;
         break;
+
     case 3: //ACK of Dev Status
         //Wait for the rest of Device Status
         break;
+
     case 4: //Status
         serialTimer.stop();
         qDebug() << "Device Status Read: " << response.toHex();
@@ -188,11 +163,23 @@ void Device::handleResponse(){
         else
             no_data=true;
         break;
-    case 5:
-        //Unknown! do nothing
+
+    default:
+        //Do Nothing
         break;
     }
 
+}
+
+
+void Device::processError(const QString &error)
+{
+    QString status = QObject::tr("Status: Not running, %1.").arg(error);
+    qDebug() << status;
+    QMessageBox msg;
+    msg.setWindowTitle("Error Opening COM Port");
+    msg.setInformativeText(status);
+    msg.exec();
 }
 
 
@@ -253,9 +240,6 @@ void Device::currentStatus(QList<Device *> * deviceList){
             msg[5] = 0x05;
             msg[6] = 0x19;
             msg[7] = 0x00;
-//            msg[5] = 0x15;
-//            msg[6] = 0x11;
-//            msg[7] = 0xFF;
             msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
             qDebug() << "Has device " << deviceList->at(i)->name << "Changed?";
 

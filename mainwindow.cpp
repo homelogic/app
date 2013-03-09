@@ -74,7 +74,6 @@ void MainWindow::check_status_timeout(){
 }
 
 void MainWindow::load_device_defaults(){
-
     QString deviceName, deviceIdentifier, roomName;
     int roomID;
     bool dbResult;

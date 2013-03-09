@@ -10,7 +10,7 @@
 
 /* Define QTimer in ms before interrupt signal */
 #define DEVICE_QUERY_WAIT   1500
-#define CHECK_UPDATED_WAIT  4000
+#define CHECK_UPDATED_WAIT  4500
 
 #define DEVICE_QUERY_EXECUTE    true
 #define POLL_STATUS_EXECUTE   true
