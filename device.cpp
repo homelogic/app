@@ -33,6 +33,7 @@ Device::Device(){
                      this, SLOT(processTimeout()));
     QObject::connect(this, SIGNAL(writeRequest(QByteArray)),
                      this, SLOT(writeSerial(QByteArray)));
+    no_data = true;
 }
 
 
@@ -77,10 +78,29 @@ void Device::writeSerial(const QByteArray &msg){
             return;
         }
     }
-    qDebug() << "Message written";
-    this->msgRequest = msg;
+//    qDebug() << "Message written";
+//    this->msgRequest = msg;
+//    serial.write(msgRequest);
+//    serialTimer.start(400);
+    if(!no_data){
+        msgQueue.append(msg);
+        qDebug() << "Current Queue: " << msgQueue.toHex();
+    }
+    else{
+        serial.write(msg);
+        qDebug() << "Write: " << msg.toHex();
+        no_data=false;
+    }
+}
+
+
+void Device::writeNextQuery(){
+    int size = msgQueue.length();
+    msgRequest = msgQueue.left(8);
+    msgQueue = msgQueue.mid(8,(size-8));
     serial.write(msgRequest);
-    serialTimer.start(400);
+    qDebug() << "Write: " << msgRequest.toHex();
+    no_data=false;
 }
 
 void Device::processError(const QString &error)
@@ -95,18 +115,84 @@ void Device::processError(const QString &error)
 
 
 void Device::processTimeout(){
-    qDebug() << "Read: " << response.toHex();
-    int msgLength = this->msgRequest.length();
-    if(response.at(msgLength)!=0x06){
-        qDebug() << "Error, resend.";
-        emit writeRequest(msgRequest);
-    }
+//    qDebug() << "Read: " << response.toHex();
+//    int msgLength = this->msgRequest.length();
+//    if(response.at(msgLength)!=0x06){
+//        qDebug() << "Error, resend.";
+//        emit writeRequest(msgRequest);
+//    }
+//    response.clear();
+
+
+//    qDebug() << "Timeout";
+//    response.clear();
+//    if(msgQueue.length() > 0)
+//        writeNextQuery();
+//    else
+//        no_data=true;
+    qDebug() << "Timeout";
     response.clear();
+    if(msgQueue.length() > 0)
+        this->writeNextQuery();
+    else
+        no_data=true;
 }
 
 
 void Device::handleResponse(){
     response.append(serial.readAll());  
+    static int state = 0;
+    int msgSize = response.length();
+    if(msgSize<9)
+        state = 0; //not ready
+    else if(response.at(8)==0x15)
+        state = 1;
+    else if( (response.endsWith(0xFF) || response.endsWith(QByteArray(0x00))) && response.contains(0x21))
+        state = 4;
+    else if(response.at(8)==(0x06) && response.at(6)==0x19)
+        state = 3;
+    else if(response.at(8)==(0x06))
+        state = 2;
+    else
+        state = 0;
+
+    switch(state){
+    case 0:
+        serialTimer.start(500);
+        //Not ready - do nothing, wait for read to come in.
+        break;
+    case 1: //NACK
+        serialTimer.stop();
+        qDebug() << "Read: " << response.toHex();
+        response.clear();
+        serial.write(msgRequest); //write again
+        break;
+    case 2: //ACK
+        serialTimer.stop();
+        qDebug() << "Read: " << response.toHex();
+        response.clear();
+        if(msgQueue.length() > 0)
+            writeNextQuery();
+        else
+            no_data=true;
+        break;
+    case 3: //ACK of Dev Status
+        //Wait for the rest of Device Status
+        break;
+    case 4: //Status
+        serialTimer.stop();
+        qDebug() << "Device Status Read: " << response.toHex();
+        response.clear();
+        if(msgQueue.length() > 0)
+            this->writeNextQuery();
+        else
+            no_data=true;
+        break;
+    case 5:
+        //Unknown! do nothing
+        break;
+    }
+
 }
 
 
@@ -167,13 +253,16 @@ void Device::currentStatus(QList<Device *> * deviceList){
             msg[5] = 0x05;
             msg[6] = 0x19;
             msg[7] = 0x00;
+//            msg[5] = 0x15;
+//            msg[6] = 0x11;
+//            msg[7] = 0xFF;
             msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
             qDebug() << "Has device " << deviceList->at(i)->name << "Changed?";
 
             emit writeRequest(msg);
 
             if(devStatus!=updateStatus){
-                qDebug() << deviceList->at(i)->name << " is now: " << updateStatus;
+                //qDebug() << deviceList->at(i)->name << " is now: " << updateStatus;
                 updateStatus = !updateStatus;
             }
         }
@@ -299,6 +388,7 @@ void Device::light_on(QList<Device *> * deviceList, int index){
     qDebug() << "Send: " << msg.toHex();
     //send(msg,&msgStatus);   
     emit writeRequest(msg);
+
     msgStatus=true;
     if(msgStatus==true){
         deviceList->at(index)->status=1;
@@ -385,6 +475,7 @@ void Device::door_unlock(QList<Device *> * deviceList, int index){
     msg[7] = 0xFF;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
+    emit writeRequest(msg);
     msgStatus = true;
     if(msgStatus==true){
         deviceList->at(index)->status=0;

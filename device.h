@@ -26,6 +26,7 @@ public:
     void statusChanged(QList<Device *> * deviceList, int index);
     void serialFailed(QString devID, int status);
     void open_port();
+    void writeNextQuery();
 
 
     /* Functions for device action */
@@ -62,8 +63,8 @@ private:
     QSerialPort serial;
     QTimer serialTimer;
 
-    bool readySend;
-    bool sent;
+    bool no_data;
+    QByteArray msgQueue;
 };
 
 #endif // DEVICE_H

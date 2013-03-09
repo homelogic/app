@@ -49,12 +49,18 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::timer_start(){
+
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(device_timer_timeout()));
-    timer->start(DEVICE_QUERY_WAIT);
+    if(DEVICE_QUERY_EXECUTE==true){
+        timer->start(DEVICE_QUERY_WAIT);
+    }
+
     QTimer *statusTimer = new QTimer(this);
     connect(statusTimer, SIGNAL(timeout()), this, SLOT(check_status_timeout()));
-    statusTimer->start(CHECK_UPDATED_WAIT);
+    if(POLL_STATUS_EXECUTE==true){
+        statusTimer->start(CHECK_UPDATED_WAIT);
+    }
 }
 
 void MainWindow::device_timer_timeout(){
