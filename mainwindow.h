@@ -7,6 +7,7 @@
 #include <QtSql/QtSql>
 #include <QList>
 #include <QTimer>
+#include <QObject>
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,7 @@ public:
     void timer_start();
     void change_updated(QString msg);
     
+
 private slots:
 
 

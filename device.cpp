@@ -37,43 +37,49 @@ Device::Device(){
 }
 
 
+void Device::setupList (QList<Device *> * devices){
+    deviceList = devices;
+}
+
+
 void Device::writeSerial(const QByteArray &msg){
     if (serial.portName() != "COM3") {
         serial.close();
         serial.setPortName("COM3");
+        serial.open(QIODevice::ReadWrite);
 
-        if (!serial.open(QIODevice::ReadWrite)) {
-            processError(tr("Can't open %1, error code %2")
+        if (!serial.isOpen()) {
+            processSerialError(tr("Can't open %1, error code %2")
                          .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setBaudRate(QSerialPort::Baud19200)) {
-            processError(tr("Can't set rate 19200 baud to port %1, error code %2")
+            processSerialError(tr("Can't set rate 19200 baud to port %1, error code %2")
                          .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setDataBits(QSerialPort::Data8)) {
-            processError(tr("Can't set 8 data bits to port %1, error code %2")
+            processSerialError(tr("Can't set 8 data bits to port %1, error code %2")
                          .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setParity(QSerialPort::NoParity)) {
-            processError(tr("Can't set no patity to port %1, error code %2")
+            processSerialError(tr("Can't set no patity to port %1, error code %2")
                          .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setStopBits(QSerialPort::OneStop)) {
-            processError(tr("Can't set 1 stop bit to port %1, error code %2")
+            processSerialError(tr("Can't set 1 stop bit to port %1, error code %2")
                          .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setFlowControl(QSerialPort::NoFlowControl)) {
-            processError(tr("Can't set no flow control to port %1, error code %2")
+            processSerialError(tr("Can't set no flow control to port %1, error code %2")
                          .arg(serial.portName()).arg(serial.error()));
             return;
         }
@@ -97,16 +103,6 @@ void Device::writeNextQueue(){
     serial.write(msgRequest);
     qDebug() << "Write: " << msgRequest.toHex();
     no_data=false;
-}
-
-
-void Device::processTimeout(){
-    qDebug() << "Timeout";
-    response.clear();
-    if(msgQueue.length() > 0)
-        this->writeNextQueue();
-    else
-        no_data=true;
 }
 
 
@@ -145,7 +141,7 @@ void Device::handleResponse(){
         qDebug() << "Read: " << response.toHex();
         response.clear();
         if(msgQueue.length() > 0)
-            writeNextQuery();
+            writeNextQueue();
         else
             no_data=true;
         break;
@@ -159,7 +155,7 @@ void Device::handleResponse(){
         qDebug() << "Device Status Read: " << response.toHex();
         response.clear();
         if(msgQueue.length() > 0)
-            this->writeNextQuery();
+            this->writeNextQueue();
         else
             no_data=true;
         break;
@@ -171,8 +167,17 @@ void Device::handleResponse(){
 
 }
 
+void Device::processTimeout(){
+    qDebug() << "Timeout";
+    response.clear();
+    if(msgQueue.length() > 0)
+        this->writeNextQueue();
+    else
+        no_data=true;
+}
 
-void Device::processError(const QString &error)
+
+void Device::processSerialError(const QString &error)
 {
     QString status = QObject::tr("Status: Not running, %1.").arg(error);
     qDebug() << status;
@@ -180,8 +185,8 @@ void Device::processError(const QString &error)
     msg.setWindowTitle("Error Opening COM Port");
     msg.setInformativeText(status);
     msg.exec();
+    exit(1);
 }
-
 
 QDateTime Device::getUpdatedTime(QString devID){
     QSqlQuery query;
@@ -197,7 +202,7 @@ QDateTime Device::getUpdatedTime(QString devID){
     return returnedTime;
 }
 
-void Device::check_updated(QList<Device *> * deviceList)
+void Device::check_updated()
 {
     QString deviceId, updatedQry;
     QSqlQuery query;
@@ -213,14 +218,14 @@ void Device::check_updated(QList<Device *> * deviceList)
             date.setDate(query.value(0).toDate());
             if(date > deviceList->at(i)->lastUpdated){
                 qDebug() << deviceId << "has been modified";
-                statusChanged(deviceList,i);
+                statusChanged(i);
                 deviceList->at(i)->lastUpdated = date;
             }
         }
     }
 }
 
-void Device::currentStatus(QList<Device *> * deviceList){
+void Device::currentStatus(){
     QString devID, updateQry;
     int devStatus, updateStatus;
     updateStatus=0;
@@ -253,7 +258,7 @@ void Device::currentStatus(QList<Device *> * deviceList){
     }
 }
 
-void Device::statusChanged(QList<Device *> * deviceList, int index){
+void Device::statusChanged(int index){
     //qDebug() << "\nIt was observed that device: " << deviceList->at(index)->deviceID << " has been modified!";
     QSqlQuery query;
     int devStatus = deviceList->at(index)->status;
@@ -278,10 +283,10 @@ void Device::statusChanged(QList<Device *> * deviceList, int index){
             if(devStatus != deviceList->at(index)->status){
                 switch(devStatus){
                 case 1:
-                    light_on(deviceList,index);
+                    light_on(index);
                     break;
                 case 0:
-                    light_off(deviceList,index);
+                    light_off(index);
                     break;
                 default:
                     qDebug() << "Error: unknown action to be taken!";
@@ -292,10 +297,10 @@ void Device::statusChanged(QList<Device *> * deviceList, int index){
             if(devStatus != deviceList->at(index)->status){
                 switch(devStatus){
                 case 1:
-                    door_lock(deviceList,index);
+                    door_lock(index);
                     break;
                 case 0:
-                    door_unlock(deviceList,index);
+                    door_unlock(index);
                     break;
                 default:
                     qDebug() << "Error: unknown action to be taken!";
@@ -309,11 +314,11 @@ void Device::statusChanged(QList<Device *> * deviceList, int index){
                 switch(devStatus){
                 case 1:
                     //qDebug() << "Turn thermostat on";
-                    thermostat_on(deviceList,index);
+                    thermostat_on(index);
                     break;
                 case 0:
                     //qDebug() << "Turn thermostat off";
-                    thermostat_off(deviceList,index);
+                    thermostat_off(index);
                     break;
                 default:
                     qDebug() << "Error: unknown action to be taken!";
@@ -323,7 +328,7 @@ void Device::statusChanged(QList<Device *> * deviceList, int index){
 
             /*Determine if the device value should be modified */
             if(devValue != deviceList->at(index)->value){
-                thermostat_value(deviceList,index,devValue);
+                thermostat_value(index,devValue);
             }
         } else{
             qDebug() << "No action to be taken";
@@ -351,13 +356,12 @@ void Device::serialFailed(QString devID, int status){
 
 
 /* Functions for device action */
-void Device::light_on(QList<Device *> * deviceList, int index){
+void Device::light_on(int index){
     //Turn light on
 
     QString devID = deviceList->at(index)->deviceID;
 
     QByteArray msg;
-    bool msgStatus;
     msg.resize(8);
 
     msg[0] = 0x02;
@@ -370,26 +374,16 @@ void Device::light_on(QList<Device *> * deviceList, int index){
     msg[7] = 0xFF;
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
-    //send(msg,&msgStatus);   
     emit writeRequest(msg);
-
-    msgStatus=true;
-    if(msgStatus==true){
-        deviceList->at(index)->status=1;
-    } else{
-        serialFailed(devID,0);
-        deviceList->at(index)->status=0;
-    }
 
 }
 
-void Device::light_off(QList<Device *> * deviceList, int index){
+void Device::light_off(int index){
     //turn light off
 
     QString devID = deviceList->at(index)->deviceID;
 
     QByteArray msg;
-    bool msgStatus;
     msg.resize(8);
 
     msg[0] = 0x02;
@@ -403,21 +397,13 @@ void Device::light_off(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     emit writeRequest(msg);
-    msgStatus=true;
-    if(msgStatus==true){
-        deviceList->at(index)->status=0;
-    } else{
-        serialFailed(devID,1);
-        deviceList->at(index)->status=1;
-    }
 }
 
-void Device::door_lock(QList<Device *> * deviceList, int index){
+void Device::door_lock(int index){
     //Lock Door
     QString devID = deviceList->at(index)->deviceID;
 
     QByteArray msg;
-    bool msgStatus;
     msg.resize(8);
 
     msg[0] = 0x02;
@@ -431,22 +417,14 @@ void Device::door_lock(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     emit writeRequest(msg);
-    msgStatus = true;
-    if(msgStatus==true){
-        deviceList->at(index)->status=1;
-    } else{
-        serialFailed(devID,0);
-        deviceList->at(index)->status=0;
-    }
 
 }
 
-void Device::door_unlock(QList<Device *> * deviceList, int index){
+void Device::door_unlock(int index){
     //Unlock Door
     QString devID = deviceList->at(index)->deviceID;
 
     QByteArray msg;
-    bool msgStatus;
     msg.resize(8);
 
     msg[0] = 0x02;
@@ -460,29 +438,22 @@ void Device::door_unlock(QList<Device *> * deviceList, int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     emit writeRequest(msg);
-    msgStatus = true;
-    if(msgStatus==true){
-        deviceList->at(index)->status=0;
-    } else{
-        serialFailed(devID,0);
-        deviceList->at(index)->status=1;
-    }
 }
 
-void Device::thermostat_on(QList<Device *> * deviceList, int index){
+void Device::thermostat_on(int index){
     qDebug() << "Turn Thermostat on";
 
     //turn thermostat on
     deviceList->at(index)->status=1;
 }
 
-void Device::thermostat_off(QList<Device *> * deviceList, int index){
+void Device::thermostat_off(int index){
     qDebug() << "Turn Thermostat off";
         //turn thermostat off
     deviceList->at(index)->status=0;
 }
 
-void Device::thermostat_value(QList<Device *> * deviceList, int index, int newValue){
+void Device::thermostat_value(int index, int newValue){
     qDebug() << "Adjust thermostat value to: " << newValue;
         //adjust thermostat value
     deviceList->at(index)->value=newValue;

@@ -1,15 +1,5 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2013-01-14T19:54:01
-#
-#-------------------------------------------------
+QT       += widgets serialport core gui sql
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT       += widgets serialport serialport
-} else {
-    include($$QTSERIALPORT_PROJECT_ROOT/src/serialport/qt4support/serialport.prf)
-}
-QT += core gui sql
 
 
 TARGET = HomeLogic
@@ -18,10 +8,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
         mainwindow.cpp \
-    device.cpp
+    device.cpp \
+    serialcomm.cpp
 
 HEADERS  += mainwindow.h \
     device.h \
-    defaults.h
+    defaults.h \
+    serialcomm.h
 
 FORMS    += mainwindow.ui

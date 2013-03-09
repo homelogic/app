@@ -4,13 +4,13 @@
 
 #include <QDateTime>
 #include <Qtimer>
-#include <QThread>
 #include <QtSerialPort/qserialport.h>
+#include <QObject>
 
 #include "serialthread.h"
 
 
-class Device : public QThread
+class Device : public QObject
 {
     Q_OBJECT
 
@@ -21,28 +21,27 @@ public:
     Device();
 
     QDateTime getUpdatedTime(QString devID);
-    void check_updated(QList<Device *> * deviceList);
-    void currentStatus(QList<Device *> * deviceList);
-    void statusChanged(QList<Device *> * deviceList, int index);
+    void setupList (QList<Device *> * devices);
+    void check_updated();
+    void currentStatus();
+    void statusChanged(int index);
     void serialFailed(QString devID, int status);
     void open_port();
     void writeNextQueue();
+    void processSerialError(const QString &error);
 
 
     /* Functions for device action */
-    void light_on(QList<Device *> * deviceList, int index);
-    void light_off(QList<Device *> * deviceList, int index);
-    void door_lock(QList<Device *> * deviceList, int index);
-    void door_unlock(QList<Device *> * deviceList, int index);
-    void thermostat_on(QList<Device *> * deviceList, int index);
-    void thermostat_off(QList<Device *> * deviceList, int index);
-    void thermostat_value(QList<Device *> * deviceList, int index, int newValue);
-    void send(QByteArray &data, bool *status);
-    void send(QByteArray &data, bool *status, int *devStatus);
+    void light_on(int index);
+    void light_off(int index);
+    void door_lock(int index);
+    void door_unlock(int index);
+    void thermostat_on(int index);
+    void thermostat_off(int index);
+    void thermostat_value(int index, int newValue);
 
 private slots:
     void processTimeout();
-    void processError(const QString &error);
     void handleResponse();
     void writeSerial(const QByteArray &msg);
 
@@ -63,6 +62,8 @@ private:
     QByteArray msgQueue;
     QSerialPort serial;
     QTimer serialTimer;
+
+    QList<Device *> * deviceList;
 
     bool no_data;
 

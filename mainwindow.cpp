@@ -40,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     }
 
-
 }
 MainWindow::~MainWindow()
 {
@@ -65,12 +64,12 @@ void MainWindow::timer_start(){
 
 void MainWindow::device_timer_timeout(){
     //qDebug() << "\nTimeout Received";
-    myDevice.check_updated(&devices);
+    myDevice.check_updated();
 }
 
 void MainWindow::check_status_timeout(){
     qDebug() << "Second timeout received";
-    myDevice.currentStatus(&devices);
+    myDevice.currentStatus();
 }
 
 void MainWindow::load_device_defaults(){
@@ -145,6 +144,8 @@ void MainWindow::load_device_list(){
 
         devices.append(new Device(devID,devName,devType,parentRoom,devValue,devStatus,updated));
     }
+
+    myDevice.setupList(&devices);
 }
 
 
