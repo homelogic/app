@@ -3,11 +3,8 @@
 
 
 #include <QDateTime>
-#include <Qtimer>
-#include <QtSerialPort/qserialport.h>
 #include <QObject>
-
-#include "serialthread.h"
+#include "serialcomm.h"
 
 
 class Device : public QObject
@@ -25,10 +22,6 @@ public:
     void check_updated();
     void currentStatus();
     void statusChanged(int index);
-    void serialFailed(QString devID, int status);
-    void open_port();
-    void writeNextQueue();
-    void processSerialError(const QString &error);
 
 
     /* Functions for device action */
@@ -41,9 +34,7 @@ public:
     void thermostat_value(int index, int newValue);
 
 private slots:
-    void processTimeout();
-    void handleResponse();
-    void writeSerial(const QByteArray &msg);
+    void handleDeviceStatus(const QByteArray &response);
 
 signals:
     void writeRequest(const QByteArray &msg);
@@ -57,15 +48,8 @@ private:
     int status;     //1:On 0:Off
     QDateTime lastUpdated; //Time from MySQL DB
 
-    QByteArray response;
-    QByteArray msgRequest;
-    QByteArray msgQueue;
-    QSerialPort serial;
-    QTimer serialTimer;
-
     QList<Device *> * deviceList;
-
-    bool no_data;
+    SerialComm serial;
 
 };
 

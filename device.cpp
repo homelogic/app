@@ -5,7 +5,7 @@
 #include <QList>
 #include <QMessageBox>
 #include <QtSql/QtSql>
-#include <QtSerialPort/qserialport.h>
+
 
 
 
@@ -26,14 +26,10 @@ Device::Device(QString devID, QString devName, QString devType, int parentRoom, 
 }
 Device::Device(){
 
-    QObject::connect(&serial, SIGNAL(readyRead()),
-                     this, SLOT(handleResponse()));
-    QObject::connect(&serialTimer, SIGNAL(timeout()),
-                     this, SLOT(processTimeout()));
     QObject::connect(this, SIGNAL(writeRequest(QByteArray)),
-                     this, SLOT(writeSerial(QByteArray)));
-    no_data = true;
-    serialTimer.setSingleShot(true);
+                     &serial, SLOT(writeSerial(QByteArray)));
+    QObject::connect(&serial, SIGNAL(devstatusResponse(QByteArray)),
+                     this, SLOT(handleDeviceStatus(QByteArray)));
 }
 
 
@@ -41,152 +37,6 @@ void Device::setupList (QList<Device *> * devices){
     deviceList = devices;
 }
 
-
-void Device::writeSerial(const QByteArray &msg){
-    if (serial.portName() != "COM3") {
-        serial.close();
-        serial.setPortName("COM3");
-        serial.open(QIODevice::ReadWrite);
-
-        if (!serial.isOpen()) {
-            processSerialError(tr("Can't open %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setBaudRate(QSerialPort::Baud19200)) {
-            processSerialError(tr("Can't set rate 19200 baud to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setDataBits(QSerialPort::Data8)) {
-            processSerialError(tr("Can't set 8 data bits to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setParity(QSerialPort::NoParity)) {
-            processSerialError(tr("Can't set no patity to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setStopBits(QSerialPort::OneStop)) {
-            processSerialError(tr("Can't set 1 stop bit to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-
-        if (!serial.setFlowControl(QSerialPort::NoFlowControl)) {
-            processSerialError(tr("Can't set no flow control to port %1, error code %2")
-                         .arg(serial.portName()).arg(serial.error()));
-            return;
-        }
-    }
-
-    if(!no_data){
-        msgQueue.append(msg);
-    }
-    else{
-        serial.write(msg);
-        qDebug() << "Write: " << msg.toHex();
-        no_data=false;
-    }
-}
-
-
-void Device::writeNextQueue(){
-    int size = msgQueue.length();
-    msgRequest = msgQueue.left(8);
-    msgQueue = msgQueue.mid(8,(size-8));
-    serial.write(msgRequest);
-    qDebug() << "Write: " << msgRequest.toHex();
-    no_data=false;
-}
-
-
-void Device::handleResponse(){
-    response.append(serial.readAll());  
-    static int state = 0;
-    int msgSize = response.length();
-    if(msgSize<9)
-        state = 0; //not ready
-    else if(response.at(8)==0x15)
-        state = 1;
-    else if( (response.endsWith(0xFF) || response.endsWith(QByteArray(0x00))) && response.contains(0x21))
-        state = 4;
-    else if(response.at(8)==(0x06) && response.at(6)==0x19)
-        state = 3;
-    else if(response.at(8)==(0x06))
-        state = 2;
-    else
-        state = 0;
-
-    switch(state){
-    case 0:
-        serialTimer.start(500);
-        //Not ready - do nothing, wait for more bytes.
-        break;
-
-    case 1: //NACK
-        serialTimer.stop();
-        qDebug() << "NACK: " << response.toHex();
-        response.clear();
-        serial.write(msgRequest); //write again
-        break;
-
-    case 2: //ACK
-        serialTimer.stop();
-        qDebug() << "Read: " << response.toHex();
-        response.clear();
-        if(msgQueue.length() > 0)
-            writeNextQueue();
-        else
-            no_data=true;
-        break;
-
-    case 3: //ACK of Dev Status
-        //Wait for the rest of Device Status
-        break;
-
-    case 4: //Status
-        serialTimer.stop();
-        qDebug() << "Device Status Read: " << response.toHex();
-        response.clear();
-        if(msgQueue.length() > 0)
-            this->writeNextQueue();
-        else
-            no_data=true;
-        break;
-
-    default:
-        //Do Nothing
-        break;
-    }
-
-}
-
-void Device::processTimeout(){
-    qDebug() << "Timeout";
-    response.clear();
-    if(msgQueue.length() > 0)
-        this->writeNextQueue();
-    else
-        no_data=true;
-}
-
-
-void Device::processSerialError(const QString &error)
-{
-    QString status = QObject::tr("Status: Not running, %1.").arg(error);
-    qDebug() << status;
-    QMessageBox msg;
-    msg.setWindowTitle("Error Opening COM Port");
-    msg.setInformativeText(status);
-    msg.exec();
-    exit(1);
-}
 
 QDateTime Device::getUpdatedTime(QString devID){
     QSqlQuery query;
@@ -226,13 +76,9 @@ void Device::check_updated()
 }
 
 void Device::currentStatus(){
-    QString devID, updateQry;
-    int devStatus, updateStatus;
-    updateStatus=0;
-    QSqlQuery query;
+    QString devID;
     for(int i=0; i<deviceList->size(); i++){
         if(deviceList->at(i)->type == "Light"){
-            devStatus = deviceList->at(i)->status;
             devID = deviceList->at(i)->deviceID;
             QByteArray msg;
             msg.resize(8);
@@ -246,17 +92,47 @@ void Device::currentStatus(){
             msg[6] = 0x19;
             msg[7] = 0x00;
             msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
-            qDebug() << "Has device " << deviceList->at(i)->name << "Changed?";
-
             emit writeRequest(msg);
-
-            if(devStatus!=updateStatus){
-                //qDebug() << deviceList->at(i)->name << " is now: " << updateStatus;
-                updateStatus = !updateStatus;
             }
         }
-    }
 }
+
+void Device::handleDeviceStatus(const QByteArray &response){
+    int status;
+    if(response.endsWith(0xFF)) //ON
+        status = 1;
+    else if(response.endsWith(QByteArray(0x00))) //OFF
+        status = 0;
+    else //Unknown
+        status = -1;
+
+    QString devID;
+    devID = response.mid(2,3).toHex();
+    devID = devID.toUpper();
+
+    qDebug() << "Device: " << devID << " is " << status;
+
+    for(int i=0;i<deviceList->size();i++){
+        if(deviceList->at(i)->deviceID==devID){
+            if(deviceList->at(i)->status==status){
+                //Do Nothing
+            } else{
+                deviceList->at(i)->status=status;
+                QSqlQuery query;
+                QString updateStr = "UPDATE tbl_device SET status='"+QString::number(status)+"' WHERE device_id='"+devID+"'";
+                deviceList->at(i)->status = status;
+                //qDebug() << updateStr;
+                bool dbStatus = query.exec(updateStr);
+                if (dbStatus==false){
+                    qDebug() << "Query error in device status update.";
+                }
+            }
+        }
+
+    }
+
+}
+
 
 void Device::statusChanged(int index){
     //qDebug() << "\nIt was observed that device: " << deviceList->at(index)->deviceID << " has been modified!";
@@ -336,22 +212,6 @@ void Device::statusChanged(int index){
     }else{
         qDebug() << "There was an error in the status Query in Device::StatusChanged";
     }
-}
-
-/* Function to handle cases when serial action to update device fails */
-void Device::serialFailed(QString devID, int status){
-    QMessageBox msg;
-    QSqlQuery query;
-    QString updateStr = QString("UPDATE tbl_device SET status=%1 WHERE device_id='%2'").arg(status).arg(devID);
-    qDebug() << "Failed update string: " << updateStr;
-    bool dbStatus = query.exec(updateStr);
-    if(dbStatus!=true){
-        msg.setInformativeText("The device failed to update status & db update operation failed. You should reboot the system");
-    }
-    else{
-        msg.setInformativeText("The device failed to update, the status has been reverted in the database!");
-    }
-    msg.exec();
 }
 
 
