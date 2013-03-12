@@ -72,8 +72,8 @@ public:
     QLineEdit *deviceValue;
     QComboBox *deviceTypeSelect;
     QWidget *monitorTab;
-    QTextBrowser *updatedWindow;
-    QLabel *label;
+    QTextBrowser *statusMonitor;
+    QLabel *LastUpdatedLabel;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -305,16 +305,16 @@ public:
         setupMonitorTabs->addTab(setupTab, QString());
         monitorTab = new QWidget();
         monitorTab->setObjectName(QStringLiteral("monitorTab"));
-        updatedWindow = new QTextBrowser(monitorTab);
-        updatedWindow->setObjectName(QStringLiteral("updatedWindow"));
-        updatedWindow->setGeometry(QRect(10, 30, 551, 192));
-        label = new QLabel(monitorTab);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 10, 131, 16));
+        statusMonitor = new QTextBrowser(monitorTab);
+        statusMonitor->setObjectName(QStringLiteral("statusMonitor"));
+        statusMonitor->setGeometry(QRect(10, 30, 551, 192));
+        LastUpdatedLabel = new QLabel(monitorTab);
+        LastUpdatedLabel->setObjectName(QStringLiteral("LastUpdatedLabel"));
+        LastUpdatedLabel->setGeometry(QRect(10, 10, 131, 16));
         QFont font5;
         font5.setFamily(QStringLiteral("Gisha"));
         font5.setPointSize(11);
-        label->setFont(font5);
+        LastUpdatedLabel->setFont(font5);
         setupMonitorTabs->addTab(monitorTab, QString());
         MainWindow->setCentralWidget(centralWidget);
 #ifndef QT_NO_SHORTCUT
@@ -328,7 +328,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        setupMonitorTabs->setCurrentIndex(0);
+        setupMonitorTabs->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -357,7 +357,7 @@ public:
         statusLabel->setText(QApplication::translate("MainWindow", "Status:", 0));
         valueLabel->setText(QApplication::translate("MainWindow", "Set Value:", 0));
         setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(setupTab), QApplication::translate("MainWindow", "Setup", 0));
-        label->setText(QApplication::translate("MainWindow", "Last Updated:", 0));
+        LastUpdatedLabel->setText(QApplication::translate("MainWindow", "Last Updated:", 0));
         setupMonitorTabs->setTabText(setupMonitorTabs->indexOf(monitorTab), QApplication::translate("MainWindow", "Monitor", 0));
     } // retranslateUi
 

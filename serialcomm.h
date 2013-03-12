@@ -17,6 +17,7 @@ public:
 
 signals:
     void devstatusResponse(const QByteArray &msg);
+    void statusUpdate(const QString update);
 
 public slots:
     void processTimeout();

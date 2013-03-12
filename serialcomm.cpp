@@ -83,12 +83,13 @@ void SerialComm::writeNextQueue(){
 
 
 void SerialComm::handleResponse(){
+    QString updateMsg;
     response.append(serial.readAll());
     static int state = 0;
     int msgSize = response.length();
     if(msgSize<9)
         state = 0; //not ready
-    else if(response.at(8)==0x15)
+    else if(response.at(8)==0x15 || response.endsWith(0x15))
         state = 1;
     else if( (response.endsWith(0xFF) || response.endsWith(QByteArray(0x00))) && response.contains(0x21))
         state = 4;
@@ -107,14 +108,18 @@ void SerialComm::handleResponse(){
 
     case 1: //NACK
         serialTimer.stop();
-        qDebug() << "NACK: " << response.toHex();
+        updateMsg = tr("NACK: %1").arg(QString(response.toHex()));
+        emit statusUpdate(updateMsg);
+        //qDebug() << "NACK: " << response.toHex();
         response.clear();
         serial.write(msgRequest); //write again
         break;
 
     case 2: //ACK
         serialTimer.stop();
-        qDebug() << "Read: " << response.toHex();
+        updateMsg = tr("Read: %1").arg(QString(response.toHex()));
+        emit statusUpdate(updateMsg);
+        //qDebug() << "Read: " << response.toHex();
         response.clear();
         if(msgQueue.length() > 0)
             writeNextQueue();

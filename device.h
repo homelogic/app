@@ -38,6 +38,7 @@ private slots:
 
 signals:
     void writeRequest(const QByteArray &msg);
+    void statusUpdate(const QString update);
 
 private:
     QString name;   //name of device

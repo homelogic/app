@@ -1,16 +1,10 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QString>
 #include <stdio.h>
 #include <QtDebug>
 #include <QMessageBox>
-#include "device.h"
-#include <QList>
-#include "defaults.h"
-#include <QtSql/QtSql>
-#include <QtSerialPort/qserialport.h>
-#include <QDateTime>
+#include <QTime>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -39,6 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
          qDebug() << "Datbase connect error message not displayed.";
         }
     }
+
+    QObject::connect(&serial, SIGNAL(statusUpdate(QString)),
+                     this, SLOT(update_StatusMonitor(QString)));
+    QObject::connect(&myDevice, SIGNAL(statusUpdate(QString)),
+                     this, SLOT(update_StatusMonitor(QString)));
 
 }
 MainWindow::~MainWindow()
@@ -70,6 +69,10 @@ void MainWindow::device_timer_timeout(){
 void MainWindow::check_status_timeout(){
     qDebug() << "Second timeout received";
     myDevice.currentStatus();
+}
+
+void MainWindow::load_rooms(){
+    myRoom.load_room_list();
 }
 
 void MainWindow::load_device_defaults(){
@@ -430,4 +433,11 @@ void MainWindow::on_newRoomButton_clicked()
 {
     ui->roomSelect->setCurrentIndex(-1);
     ui->roomName->setText("");
+}
+
+/* Update the status monitor tab */
+void MainWindow::update_StatusMonitor(QString update){
+    QTime timeNow = QTime::currentTime();
+    QString updateStr = tr("%1: %2").arg(timeNow.toString()).arg(update);
+    ui->statusMonitor->append(updateStr);
 }

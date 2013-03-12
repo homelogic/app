@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="setupTab">
      <attribute name="title">
@@ -630,7 +630,7 @@
      <attribute name="title">
       <string>Monitor</string>
      </attribute>
-     <widget class="QTextBrowser" name="updatedWindow">
+     <widget class="QTextBrowser" name="statusMonitor">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -640,7 +640,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="LastUpdatedLabel">
       <property name="geometry">
        <rect>
         <x>10</x>

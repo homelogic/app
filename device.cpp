@@ -38,6 +38,8 @@ void Device::setupList (QList<Device *> * devices){
 }
 
 
+
+
 QDateTime Device::getUpdatedTime(QString devID){
     QSqlQuery query;
     QDateTime returnedTime;
@@ -110,7 +112,9 @@ void Device::handleDeviceStatus(const QByteArray &response){
     devID = response.mid(2,3).toHex();
     devID = devID.toUpper();
 
-    qDebug() << "Device: " << devID << " is " << status;
+    QString updateMsg;
+    updateMsg = tr("Device %1 - Status: %2").arg(devID).arg(status);
+    emit statusUpdate(updateMsg);
 
     for(int i=0;i<deviceList->size();i++){
         if(deviceList->at(i)->deviceID==devID){

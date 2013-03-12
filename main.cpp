@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     a.addLibraryPath( a.applicationDirPath() + "/plugins");
+    w.load_rooms();
     w.load_device_defaults();
     w.load_device_list();
     w.timer_start();    

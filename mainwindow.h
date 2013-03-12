@@ -3,7 +3,11 @@
 
 #include <QMainWindow>
 #include "device.h"
+#include "serialcomm.h"
+#include "defaults.h"
+#include "room.h"
 #include <QString>
+#include <QDateTime>
 #include <QtSql/QtSql>
 #include <QList>
 #include <QTimer>
@@ -24,6 +28,7 @@ public:
 
     void load_device_defaults();
     void load_device_list();
+    void load_rooms();
     void timer_start();
     void change_updated(QString msg);
     
@@ -51,15 +56,22 @@ private slots:
 
     void check_status_timeout();
 
+    void update_StatusMonitor(QString update);
+
 private:
 
     Ui::MainWindow *ui;
     QString currentDevice;
+
     QSqlDatabase db;
     bool dbSuccess;
+
     Device  myDevice;
     QList<Device *> devices;
 
+    SerialComm serial;
+
+    Room myRoom;
 
 };
 
