@@ -40,8 +40,8 @@ Room::Room(){
 
 
 void Room::load_room_list(){
-    QSqlQuery query;
-    QString qryString;
+    QSqlQuery query, query2;
+    QString qryString, qryString2;
     QString room_name;
     int room_id, num, action, action1, action2, action3, action4;
     bool qryResult;
@@ -55,18 +55,17 @@ void Room::load_room_list(){
             room_id = query.value(0).toInt();
             room_name = query.value(1).toString();
             num = query.value(2).toInt();
-
-            qryString = tr("SELECT action_id, Lon_UserL_Loff, Loff_UserE_Lon, UserL_Loff, UserL_Lock FROM tbl_actions WHERE room_id=%1").arg(room_id);
-            qryResult = query.exec(qryString);
+            qryString2 = tr("SELECT action_id, Lon_UserL_Loff, Loff_UserE_Lon, UserL_Loff, UserL_Lock FROM tbl_actions WHERE room_id=%1").arg(room_id);
+            qryResult = query2.exec(qryString2);
             if(!qryResult){
                 qDebug() << "MySQL query error in MainWindow::load_room_list - Loading actions";
             } else{
-                while(query.next()){
-                    action = query.value(0).toInt();
-                    action1 = query.value(1).toInt();
-                    action2 = query.value(2).toInt();
-                    action3 = query.value(3).toInt();
-                    action4 = query.value(4).toInt();
+                while(query2.next()){
+                    action = query2.value(0).toInt();
+                    action1 = query2.value(1).toInt();
+                    action2 = query2.value(2).toInt();
+                    action3 = query2.value(3).toInt();
+                    action4 = query2.value(4).toInt();
                     rooms.append(new Room(room_id,room_name,num,action,action1,action2,action3,action4));
                 }
             }
