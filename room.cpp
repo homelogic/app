@@ -36,8 +36,8 @@ Room::Room(){
     roomID = 0;
     roomName = "";
     occupancy = 0;
+    occupied = false;
 }
-
 
 void Room::load_room_list(){
     QSqlQuery query, query2;
@@ -55,6 +55,9 @@ void Room::load_room_list(){
             room_id = query.value(0).toInt();
             room_name = query.value(1).toString();
             num = query.value(2).toInt();
+            if(num>0){
+                occupied = true;
+            }
             qryString2 = tr("SELECT action_id, Lon_UserL_Loff, Loff_UserE_Lon, UserL_Loff, UserL_Lock FROM tbl_actions WHERE room_id=%1").arg(room_id);
             qryResult = query2.exec(qryString2);
             if(!qryResult){
@@ -74,4 +77,55 @@ void Room::load_room_list(){
     for(int i=0; i<rooms.size();i++){
         qDebug() << tr("Room: %1 - %2:%3").arg(rooms.at(i)->roomName).arg(rooms.at(i)->roomID).arg(rooms.at(i)->occupancy);
     }
+}
+
+void Room::check_location(){
+    QSqlQuery query;
+    QString queryStr;
+    int cnt=0, totalCnt=0;
+    bool qryResult;
+    for(int i=0; i< rooms.size(); i++){
+        queryStr = tr("SELECT occupancy FROM tbl_rooms WHERE room_id=%1").arg(rooms.at(i)->roomID);
+        qryResult = query.exec(queryStr);
+        if(qryResult){
+            while(query.next()){
+                cnt = query.value(0).toInt();
+                totalCnt+=cnt;
+                /* Determine State */
+                if( (cnt > 0) && (rooms.at(i)->occupancy < 1) ){ //People have entered the room
+                    occupied = true;
+                    rooms.at(i)->occupancy = cnt;
+                    update_room_populated(i);
+                } else if( (cnt < 1) && (rooms.at(i)->occupancy > 0) ){
+                    rooms.at(i)->occupancy = cnt;
+                    update_room_vacant(i);
+                }
+            }
+        }
+    }
+    if( (totalCnt == 0) && (occupied == true) ){
+        /* House is now empty */
+
+    }
+}
+
+void Room::update_room_populated(int index){
+    int roomID;
+    if(rooms.at(index)->Loff_UserE_Lon == 1){
+        roomID = rooms.at(index)->roomID;
+        emit lightsOn(roomID); //Turn on all lights in room
+    }
+
+}
+
+void Room::update_room_vacant(int index){
+    int roomID;
+    if(rooms.at(index)->Lon_UserL_Loff == 1){
+        roomID = rooms.at(index)->roomID;
+        emit lightsOff(roomID); //Turn off all lights in room
+    }
+}
+
+void Room::update_house_empty(){
+    qDebug() << "House is now empty";
 }

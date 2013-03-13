@@ -240,6 +240,7 @@ void Device::light_on(int index){
     qDebug() << "Send: " << msg.toHex();
     emit writeRequest(msg);
 
+    deviceList->at(index)->status = (deviceList->at(index)->status ^ 1);
 }
 
 void Device::light_off(int index){
@@ -261,6 +262,8 @@ void Device::light_off(int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     emit writeRequest(msg);
+
+    deviceList->at(index)->status = (deviceList->at(index)->status ^ 1);
 }
 
 void Device::door_lock(int index){
@@ -282,6 +285,8 @@ void Device::door_lock(int index){
     qDebug() << "Send: " << msg.toHex();
     emit writeRequest(msg);
 
+    deviceList->at(index)->status = (deviceList->at(index)->status ^ 1);
+
 }
 
 void Device::door_unlock(int index){
@@ -302,6 +307,8 @@ void Device::door_unlock(int index){
     msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
     qDebug() << "Send: " << msg.toHex();
     emit writeRequest(msg);
+
+    deviceList->at(index)->status = (deviceList->at(index)->status ^ 1);
 }
 
 void Device::thermostat_on(int index){
@@ -321,5 +328,23 @@ void Device::thermostat_value(int index, int newValue){
     qDebug() << "Adjust thermostat value to: " << newValue;
         //adjust thermostat value
     deviceList->at(index)->value=newValue;
+}
+
+void Device::room_Lights_Off(int roomID){
+    qDebug() << "Lights Off - Received " << roomID;
+    for(int i=0; i<deviceList->size(); i++){
+        if( (deviceList->at(i)->room==roomID) && (deviceList->at(i)->type=="Light") ){
+            light_off(i);
+        }
+    }
+}
+
+void Device::room_Lights_On(int roomID){
+    qDebug() << "Lights On - Received " << roomID;
+    for(int i=0; i<deviceList->size(); i++){
+        if( (deviceList->at(i)->room==roomID) && (deviceList->at(i)->type=="Light") ){
+            light_on(i);
+        }
+    }
 }
 

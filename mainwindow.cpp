@@ -38,6 +38,10 @@ MainWindow::MainWindow(QWidget *parent) :
                      this, SLOT(update_StatusMonitor(QString)));
     QObject::connect(&myDevice, SIGNAL(statusUpdate(QString)),
                      this, SLOT(update_StatusMonitor(QString)));
+    QObject::connect(&myRoom, SIGNAL(lightsOff(int)),
+                     &myDevice, SLOT(room_Lights_Off(int)));
+    QObject::connect(&myRoom, SIGNAL(lightsOn(int)),
+                     &myDevice, SLOT(room_Lights_On(int)));
 
 }
 MainWindow::~MainWindow()
@@ -58,6 +62,12 @@ void MainWindow::timer_start(){
     connect(statusTimer, SIGNAL(timeout()), this, SLOT(check_status_timeout()));
     if(POLL_STATUS_EXECUTE==true){
         statusTimer->start(CHECK_UPDATED_WAIT);
+    }
+
+    QTimer *locationTimer = new QTimer(this);
+    connect(locationTimer, SIGNAL(timeout()), &myRoom, SLOT(check_location()));
+    if(CHECK_LOCATION_EXECUTE==true){
+        locationTimer->start(CHECK_LOCATION);
     }
 }
 

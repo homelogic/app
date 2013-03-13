@@ -31,7 +31,7 @@ public:
     void load_rooms();
     void timer_start();
     void change_updated(QString msg);
-    
+
 
 private slots:
 

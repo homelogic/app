@@ -1,4 +1,5 @@
 #include "serialcomm.h"
+#include "defaults.h"
 #include <QTimer>
 #include <QDebug>
 #include <QtSerialPort/qserialport.h>
@@ -103,7 +104,7 @@ void SerialComm::handleResponse(){
 
     switch(state){
     case 0:
-        serialTimer.start(500);
+        serialTimer.start(SERIAL_TIMEOUT);
         //Not ready - do nothing, wait for more bytes.
         break;
 
@@ -129,7 +130,7 @@ void SerialComm::handleResponse(){
         break;
 
     case 3: //ACK of Dev Status
-        serialTimer.start(500);
+        serialTimer.start(SERIAL_TIMEOUT);
         //Wait for the rest of Device Status
         break;
 

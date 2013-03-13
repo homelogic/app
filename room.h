@@ -2,6 +2,7 @@
 #define ROOM_H
 
 #include <QObject>
+#include "device.h"
 
 class Room : public QObject
 {
@@ -12,6 +13,16 @@ public:
     Room();
 
     void load_room_list();
+    void update_room_populated(int index);
+    void update_room_vacant(int index);
+    void update_house_empty();
+
+private slots:
+    void check_location();
+
+signals:
+    void lightsOff(int roomID);
+    void lightsOn(int roomID);
 
 private:
     //Room characteristics
@@ -27,7 +38,7 @@ private:
     int UserL_Lock; //If all users leave - Lock doors?
 
     QList<Room *> rooms;
-
+    bool occupied; //flag to determine current state of house
     
 };
 
