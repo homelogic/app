@@ -31,6 +31,8 @@ private:
     QSerialPort serial;
     QTimer serialTimer;
     bool no_data;
+
+    int timeoutCnt;
     
 };
 

@@ -9,6 +9,7 @@ QT_USE_NAMESPACE
 
 SerialComm::SerialComm(){
     no_data = true;
+    timeoutCnt = 0;
     serialTimer.setSingleShot(true);
 
     QObject::connect(&serial, SIGNAL(readyRead()),
@@ -153,11 +154,17 @@ void SerialComm::handleResponse(){
 
 void SerialComm::processTimeout(){
     qDebug() << "Timeout";
-    response.clear();
-    if(msgQueue.length() > 0)
-        this->writeNextQueue();
-    else
-        no_data=true;
+    timeoutCnt++;
+    if(timeoutCnt > 1){
+        response.clear();
+        if(msgQueue.length() > 0)
+            this->writeNextQueue();
+        else
+            no_data=true;
+        timeoutCnt = 0;
+    } else{
+        serial.write(msgRequest);
+    }
 }
 
 
