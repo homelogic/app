@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
                      &myDevice, SLOT(room_Lights_Off(int)));
     QObject::connect(&myRoom, SIGNAL(lightsOn(int)),
                      &myDevice, SLOT(room_Lights_On(int)));
+    QObject::connect(&myRoom, SIGNAL(doorLock(int)),
+                     &myDevice, SLOT(room_Door_Lock(int)));
 
 }
 MainWindow::~MainWindow()

@@ -37,6 +37,7 @@ private slots:
     void handleDeviceStatus(const QByteArray &response);
     void room_Lights_Off(int roomID);
     void room_Lights_On(int roomID);
+    void room_Door_Lock(int roomID);
 
 signals:
     void writeRequest(const QByteArray &msg);

@@ -348,3 +348,12 @@ void Device::room_Lights_On(int roomID){
     }
 }
 
+void Device::room_Door_Lock(int roomID){
+    qDebug() << "Door Lock - Received " << roomID;
+    for(int i=0; i<deviceList->size(); i++){
+        if( (deviceList->at(i)->room==roomID) && (deviceList->at(i)->type=="Door Lock") ){
+            door_lock(i);
+        }
+    }
+}
+

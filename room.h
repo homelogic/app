@@ -23,6 +23,7 @@ private slots:
 signals:
     void lightsOff(int roomID);
     void lightsOn(int roomID);
+    void doorLock(int roomID);
 
 private:
     //Room characteristics

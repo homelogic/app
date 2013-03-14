@@ -105,6 +105,8 @@ void Room::check_location(){
     }
     if( (totalCnt == 0) && (occupied == true) ){
         /* House is now empty */
+        occupied = false;
+        update_house_empty();
 
     }
 }
@@ -128,4 +130,14 @@ void Room::update_room_vacant(int index){
 
 void Room::update_house_empty(){
     qDebug() << "House is now empty";
+    if(rooms.at(0)->UserL_Lock == 1){ //Lock doors
+        for(int i=0; i<rooms.size(); i++){
+            emit doorLock(rooms.at(i)->roomID);
+        }
+    }
+    if(rooms.at(0)->UserL_Loff == 1){ //Turn all lights off
+        for(int i=0; i<rooms.size(); i++){
+            emit lightsOff(rooms.at(i)->roomID);
+        }
+    }
 }
