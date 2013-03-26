@@ -56,6 +56,8 @@ private slots:
 
     void check_status_timeout();
 
+    void check_temperature_timeout();
+
     void update_StatusMonitor(QString update);
 
 private:

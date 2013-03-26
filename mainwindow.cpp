@@ -55,19 +55,29 @@ MainWindow::~MainWindow()
 void MainWindow::timer_start(){
 
     QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(device_timer_timeout()));
+    connect(timer, SIGNAL(timeout()),
+            &myDevice, SLOT(check_updated()));
     if(DEVICE_QUERY_EXECUTE==true){
         timer->start(DEVICE_QUERY_WAIT);
     }
 
     QTimer *statusTimer = new QTimer(this);
-    connect(statusTimer, SIGNAL(timeout()), this, SLOT(check_status_timeout()));
+    connect(statusTimer, SIGNAL(timeout()),
+            &myDevice, SLOT(currentStatus()));
     if(POLL_STATUS_EXECUTE==true){
         statusTimer->start(CHECK_UPDATED_WAIT);
     }
 
+    QTimer *temperatureTimer = new QTimer(this);
+    connect(temperatureTimer, SIGNAL(timeout()),
+            &myDevice, SLOT(currentTemperature()));
+    if(CHECK_TEMPERATURE_EXECUTE==true){
+        temperatureTimer->start(CHECK_TEMPERATURE);
+    }
+
     QTimer *locationTimer = new QTimer(this);
-    connect(locationTimer, SIGNAL(timeout()), &myRoom, SLOT(check_location()));
+    connect(locationTimer, SIGNAL(timeout()),
+            &myRoom, SLOT(check_location()));
     if(CHECK_LOCATION_EXECUTE==true){
         locationTimer->start(CHECK_LOCATION);
     }
@@ -76,6 +86,10 @@ void MainWindow::timer_start(){
 void MainWindow::device_timer_timeout(){
     //qDebug() << "\nTimeout Received";
     myDevice.check_updated();
+}
+
+void MainWindow::check_temperature_timeout(){
+    myDevice.currentTemperature();
 }
 
 void MainWindow::check_status_timeout(){
@@ -138,11 +152,11 @@ void MainWindow::load_device_list(){
     QString qryString;
 
     QString devID, devName, devType;
-    int parentRoom, devValue, devStatus;
+    int parentRoom, devValue, devStatus, temperature;
     QDateTime updated;
     bool qryResult;
 
-    qryString = "SELECT device_id, room, device_name, device_type, status, device_value, stamp FROM tbl_device";
+    qryString = "SELECT device_id, room, device_name, device_type, status, current_temp, device_value, stamp FROM tbl_device";
     qryResult = query.exec(qryString);
     if(qryResult == false){
         qDebug() << "SELECT Qry Failed - MainWindow::load_device_list\n";
@@ -153,11 +167,12 @@ void MainWindow::load_device_list(){
         devName = query.value(2).toString();
         devType = query.value(3).toString();
         devStatus = query.value(4).toInt();
-        devValue = query.value(5).toInt();
-        updated.setTime(query.value(6).toTime());
-        updated.setDate(query.value(6).toDate());
+        temperature = query.value(5).toInt();
+        devValue = query.value(6).toInt();
+        updated.setTime(query.value(7).toTime());
+        updated.setDate(query.value(7).toDate());
 
-        devices.append(new Device(devID,devName,devType,parentRoom,devValue,devStatus,updated));
+        devices.append(new Device(devID,devName,devType,parentRoom,devValue,devStatus, temperature, updated));
     }
 
     myDevice.setupList(&devices);
@@ -340,7 +355,7 @@ void MainWindow::on_deviceSaveButton_clicked()
                         updated.setDate(query.value(0).toDate());
                         updated.setTime(query.value(0).toTime());
                     }
-                    devices.append(new Device(currentDevice,deviceName,deviceType,deviceRoom.toInt(),deviceValue.toInt(),deviceStatus.toInt(),updated));
+                    devices.append(new Device(currentDevice,deviceName,deviceType,deviceRoom.toInt(),deviceValue.toInt(),deviceStatus.toInt(),0, updated));
                     //myDevice.print_list(&devices);
                 }
             } else{

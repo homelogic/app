@@ -76,8 +76,14 @@ void SerialComm::writeSerial(const QByteArray &msg){
 
 void SerialComm::writeNextQueue(){
     int size = msgQueue.length();
-    msgRequest = msgQueue.left(8);
-    msgQueue = msgQueue.mid(8,(size-8));
+    /*If standard message, write next 8 bytes. Else, write next 22 bytes */
+    if( (msgQueue.at(0)==0x02) && (msgQueue.at(5)==0x1F) ){ //Extended Message for Thermostat
+        msgRequest = msgQueue.left(22);
+        msgQueue = msgQueue.mid(22,(size-22));
+    } else{ //Standard Message
+        msgRequest = msgQueue.left(8);
+        msgQueue = msgQueue.mid(8,(size-8));
+    }
     serial.write(msgRequest);
     qDebug() << "Write: " << msgRequest.toHex();
     no_data=false;
@@ -95,9 +101,13 @@ void SerialComm::handleResponse(){
         state = 1;
     else if( (response.endsWith(0xFF) || response.endsWith(QByteArray(0x00))) && response.contains(0x21))
         state = 4;
+    else if(response.at(22)==(0x06) && response.at(32)==0x6B)
+        state = 6;
     else if(response.at(8)==(0x06) && response.at(6)==0x19)
         state = 3;
-    else if(response.at(8)==(0x06))
+    else if(response.at(22)==(0x06) && (response.at(6)==0x68 || response.at(6)==0x69) )
+        state = 5;
+    else if(response.at(8)==(0x06) || response.at(22)==(0x06))
         state = 2;
     else
         state = 0;
@@ -106,13 +116,14 @@ void SerialComm::handleResponse(){
     case 0:
         serialTimer.start(SERIAL_TIMEOUT);
         //Not ready - do nothing, wait for more bytes.
+        qDebug() << "Case 0 DEFAULT: " << response.toHex();
         break;
 
     case 1: //NACK
         serialTimer.stop();
         updateMsg = tr("NACK: %1").arg(QString(response.toHex()));
         emit statusUpdate(updateMsg);
-        //qDebug() << "NACK: " << response.toHex();
+        qDebug() << "Case 1 NACK: " << response.toHex();
         response.clear();
         serial.write(msgRequest); //write again
         break;
@@ -121,7 +132,7 @@ void SerialComm::handleResponse(){
         serialTimer.stop();
         updateMsg = tr("Read: %1").arg(QString(response.toHex()));
         emit statusUpdate(updateMsg);
-        //qDebug() << "Read: " << response.toHex();
+        qDebug() << "Case 2 ACK: " << response.toHex();
         response.clear();
         if(msgQueue.length() > 0)
             writeNextQueue();
@@ -132,11 +143,12 @@ void SerialComm::handleResponse(){
     case 3: //ACK of Dev Status
         serialTimer.start(SERIAL_TIMEOUT);
         //Wait for the rest of Device Status
+        qDebug() << "Case 3 ACK DEV Status: " << response.toHex();
         break;
 
-    case 4: //Status
+    case 4: //Status (lights)
         serialTimer.stop();
-        //qDebug() << "Device Status Read: " << response.toHex();
+        qDebug() << "Case 4 DEV Status: " << response.toHex();
         if(msgQueue.length() > 0)
             this->writeNextQueue();
         else
@@ -146,6 +158,26 @@ void SerialComm::handleResponse(){
         response.clear();
         break;
 
+    case 5: //ACK from Thermostat after setpoint update
+        qDebug() << "Case 5 Thermostat Finished: " << response.toHex();
+        serialTimer.stop();
+        if(msgQueue.length() > 0)
+            this->writeNextQueue();
+        else
+            no_data=true;
+        response.clear();
+        break;
+
+    case 6: //ACK of Thermostat Status Update
+        qDebug() << "Case 6 Thermostat Status: " << response.toHex();
+        serialTimer.stop();
+        if(msgQueue.length() > 0)
+            this->writeNextQueue();
+        else
+            no_data=true;
+        emit tempStatusResponse(response);
+        response.clear();
+        break;
     default:
         //Do Nothing
         break;
@@ -158,13 +190,14 @@ void SerialComm::processTimeout(){
     timeoutCnt++;
     if(timeoutCnt > 1){
         response.clear();
+        timeoutCnt = 0;
         if(msgQueue.length() > 0)
             this->writeNextQueue();
         else
             no_data=true;
-        timeoutCnt = 0;
     } else{
         serial.write(msgRequest);
+        qDebug() << "Write: " << msgRequest.toHex();
     }
 }
 

@@ -104,6 +104,10 @@ THERMOSTAT
 
 02 62 1E 0E 1D 05 6B 02
 
+- Zone info
+
+02 62 1E 0E 1D 05 68 01
+
 - Temp UP 1 degree * the 02 byte determines increment, take 02/2 = 1 degree, for 2 degrees 04/2 = 2 degrees *
 
 02 62 1E 0E 1D 1F 68 02 00 00 00 00 00 00 00 00 00 00 00 00 00 96

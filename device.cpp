@@ -13,15 +13,16 @@ QT_USE_NAMESPACE
 
 /* Default constructor anticipates the following format:
   deviceID, name, type, room, value, status */
-Device::Device(QString devID, QString devName, QString devType, int parentRoom, int devValue, int devStatus, QDateTime updateTime)
+Device::Device(QString devID, QString devName, QString devType, int parentRoom, int devValue, int devStatus, int temperature, QDateTime updated)
 {
     deviceID = devID;
     name = devName;
     type = devType;
     room = parentRoom;
     value = devValue;
+    currTemp = temperature;
     status = devStatus;
-    lastUpdated = updateTime;
+    lastUpdated = updated;
 
 }
 Device::Device(){
@@ -30,6 +31,8 @@ Device::Device(){
                      &serial, SLOT(writeSerial(QByteArray)));
     QObject::connect(&serial, SIGNAL(devstatusResponse(QByteArray)),
                      this, SLOT(handleDeviceStatus(QByteArray)));
+    QObject::connect(&serial, SIGNAL(tempStatusResponse(QByteArray)),
+                     this, SLOT(handleTemperatureStatus(QByteArray)));
 }
 
 
@@ -76,6 +79,43 @@ void Device::check_updated()
         }
     }
 }
+
+
+void Device::currentTemperature(){
+    for(int i=0; i<deviceList->size(); i++){
+        if(deviceList->at(i)->type == "Thermostat"){
+            QString devID = deviceList->at(i)->deviceID;
+            QByteArray msg;
+            msg.resize(22);
+            msg[0] = 0x02;
+            msg[1] = 0x62;
+            msg[2] = 0x00;
+            msg[3] = 0x00;
+            msg[4] = 0x00;
+            msg[5] = 0x1F;
+            msg[6] = 0x6B;
+            msg[7] = 0x03;
+            msg[8] = 0x00;
+            msg[9] = 0x00;
+            msg[10] = 0x00;
+            msg[11] = 0x00;
+            msg[12] = 0x00;
+            msg[13] = 0x00;
+            msg[14] = 0x00;
+            msg[15] = 0x00;
+            msg[16] = 0x00;
+            msg[17] = 0x00;
+            msg[18] = 0x00;
+            msg[19] = 0x00;
+            msg[20] = 0x00;
+            msg[21] = 0x92;
+            msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+
+            emit writeRequest(msg);
+        }
+    }
+}
+
 
 void Device::currentStatus(){
     QString devID;
@@ -135,6 +175,10 @@ void Device::handleDeviceStatus(const QByteArray &response){
 
     }
 
+}
+
+void Device::handleTemperatureStatus(const QByteArray &response){
+    qDebug() << "Received stat update " << response.toHex();
 }
 
 
@@ -312,22 +356,140 @@ void Device::door_unlock(int index){
 }
 
 void Device::thermostat_on(int index){
-    qDebug() << "Turn Thermostat on";
+    //Thermostat On
+    QString devID = deviceList->at(index)->deviceID;
 
-    //turn thermostat on
-    deviceList->at(index)->status=1;
+    QByteArray msg;
+    msg.resize(22);
+
+    msg[0] = 0x02;
+    msg[1] = 0x62;
+    msg[2] = 0x00;
+    msg[3] = 0x00;
+    msg[4] = 0x00;
+    msg[5] = 0x1F;
+    msg[6] = 0x6B;
+    msg[7] = 0x06;
+    msg[8] = 0x00;
+    msg[9] = 0x00;
+    msg[10] = 0x00;
+    msg[11] = 0x00;
+    msg[12] = 0x00;
+    msg[13] = 0x00;
+    msg[14] = 0x00;
+    msg[15] = 0x00;
+    msg[16] = 0x00;
+    msg[17] = 0x00;
+    msg[18] = 0x00;
+    msg[19] = 0x00;
+    msg[20] = 0x00;
+    msg[21] = 0x8F;
+    msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+    qDebug() << "Send: " << msg.toHex();
+    emit writeRequest(msg);
+
+    deviceList->at(index)->status = (deviceList->at(index)->status ^ 1);
 }
 
 void Device::thermostat_off(int index){
-    qDebug() << "Turn Thermostat off";
-        //turn thermostat off
-    deviceList->at(index)->status=0;
+    QString devID = deviceList->at(index)->deviceID;
+
+    QByteArray msg;
+    msg.resize(22);
+
+    msg[0] = 0x02;
+    msg[1] = 0x62;
+    msg[2] = 0x00;
+    msg[3] = 0x00;
+    msg[4] = 0x00;
+    msg[5] = 0x1F;
+    msg[6] = 0x6B;
+    msg[7] = 0x09;
+    msg[8] = 0x00;
+    msg[9] = 0x00;
+    msg[10] = 0x00;
+    msg[11] = 0x00;
+    msg[12] = 0x00;
+    msg[13] = 0x00;
+    msg[14] = 0x00;
+    msg[15] = 0x00;
+    msg[16] = 0x00;
+    msg[17] = 0x00;
+    msg[18] = 0x00;
+    msg[19] = 0x00;
+    msg[20] = 0x00;
+    msg[21] = 0x8C;
+    msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+    qDebug() << "Send: " << msg.toHex();
+    emit writeRequest(msg);
+
+    deviceList->at(index)->status = (deviceList->at(index)->status ^ 1);
 }
 
 void Device::thermostat_value(int index, int newValue){
-    qDebug() << "Adjust thermostat value to: " << newValue;
-        //adjust thermostat value
-    deviceList->at(index)->value=newValue;
+    QString devID = deviceList->at(index)->deviceID;
+    QString differenceHex;
+    int currentTemp = deviceList->at(index)->value;
+    int difference;
+
+
+    uint chkSum;
+    QString chkSumStr;
+
+    QByteArray msg;
+    msg.resize(22);
+
+    msg[0] = 0x02;
+    msg[1] = 0x62;
+    msg[2] = 0x00;
+    msg[3] = 0x00;
+    msg[4] = 0x00;
+    msg[5] = 0x1F;
+    msg[7] = 0x00;
+    msg[8] = 0x00;
+    msg[9] = 0x00;
+    msg[10] = 0x00;
+    msg[11] = 0x00;
+    msg[12] = 0x00;
+    msg[13] = 0x00;
+    msg[14] = 0x00;
+    msg[15] = 0x00;
+    msg[16] = 0x00;
+    msg[17] = 0x00;
+    msg[18] = 0x00;
+    msg[19] = 0x00;
+    msg[20] = 0x00;
+    msg[21] = 0x00;
+
+    msg.replace(2, 3, QByteArray::fromHex( devID.toLocal8Bit() ) );
+
+    difference = currentTemp - newValue;
+    if(difference < 0){ //Temp Up
+        difference = difference * -2;
+        msg[6] = 0x68;
+        differenceHex = "0x"+QString::number(difference,16);
+        msg.replace(7,1,QByteArray::fromHex( differenceHex.toLocal8Bit() ));
+        chkSum = (~((msg[6]+msg[7]+msg[8]+msg[9]+msg[10]+msg[11]+
+                msg[12]+msg[13]+msg[14]+msg[15]+msg[16]+msg[17]+msg[18]+msg[19]+msg[20]-1))&255);
+        chkSumStr = "0x"+QString::number(chkSum,16);
+        msg.replace(20,1,QByteArray::fromHex(chkSumStr.toLocal8Bit()));
+        msg.resize(22);
+    } else{ //Temp Down
+        difference = difference * 2;
+        msg[6] = 0x69;
+        differenceHex = "0x"+QString::number(difference,16);
+        msg.replace(7,1,QByteArray::fromHex( differenceHex.toLocal8Bit() ));
+        chkSum = (~(msg[6]+msg[7]+msg[8]+msg[9]+msg[10]+msg[11]+
+                msg[12]+msg[13]+msg[14]+msg[15]+msg[16]+msg[17]+msg[18]+msg[19]+msg[20]-1))&255;
+        chkSumStr = "0x"+QString::number(chkSum,16);
+        msg.replace(20,1,QByteArray::fromHex(chkSumStr.toLocal8Bit()));
+        msg.resize(22);
+    }
+    qDebug() << "Send: " << msg.toHex();
+
+    emit writeRequest(msg);
+
+    deviceList->at(index)->value = newValue;
 }
 
 void Device::room_Lights_Off(int roomID){
