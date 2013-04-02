@@ -178,7 +178,24 @@ void Device::handleDeviceStatus(const QByteArray &response){
 }
 
 void Device::handleTemperatureStatus(const QByteArray &response){
-    qDebug() << "Received stat update " << response.toHex();
+    for(int i=0; i<deviceList->size(); i++){
+        if(deviceList->at(i)->type=="Thermostat"){
+            qDebug() << "Received stat update " << response.toHex();
+            QString devID = deviceList->at(i)->deviceID;
+            QSqlQuery query;
+            int tempPos = 2 + response.indexOf(0x2B);
+            unsigned char c1 = response.at(tempPos);
+            quint32 temp = c1;
+            temp = temp/2;
+            qDebug() << "Temp is: " << temp;
+            if( temp != deviceList->at(i)->currTemp ){
+                deviceList->at(i)->currTemp = temp;
+                QString updateQry = tr("UPDATE tbl_device SET current_temp=%1 WHERE device_id='%2'").arg(temp).arg(devID);
+                query.exec(updateQry);
+                qDebug() << "Temp update: " << updateQry;
+            }
+        }
+    }
 }
 
 

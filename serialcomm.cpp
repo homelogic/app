@@ -97,16 +97,18 @@ void SerialComm::handleResponse(){
     int msgSize = response.length();
     if(msgSize<9)
         state = 0; //not ready
+    else if(response.at(22)==(0x06) && response.contains(0x6B) && response.contains(0x2B) && msgSize >= 34)
+        state = 6;
+    else if(response.at(22)==(0x06) && (response.at(6)==0x68 || response.at(6)==0x69) )
+        state = 5;
+    else if(response.at(5)==0x1f) //status not ready
+        state = 0;
     else if(response.at(8)==0x15 || response.endsWith(0x15))
         state = 1;
     else if( (response.endsWith(0xFF) || response.endsWith(QByteArray(0x00))) && response.contains(0x21))
         state = 4;
-    else if(response.at(22)==(0x06) && response.at(32)==0x6B)
-        state = 6;
     else if(response.at(8)==(0x06) && response.at(6)==0x19)
         state = 3;
-    else if(response.at(22)==(0x06) && (response.at(6)==0x68 || response.at(6)==0x69) )
-        state = 5;
     else if(response.at(8)==(0x06) || response.at(22)==(0x06))
         state = 2;
     else
@@ -186,9 +188,10 @@ void SerialComm::handleResponse(){
 }
 
 void SerialComm::processTimeout(){
-    qDebug() << "Timeout";
+
     timeoutCnt++;
     if(timeoutCnt > 1){
+        qDebug() << "Timeout Clear";
         response.clear();
         timeoutCnt = 0;
         if(msgQueue.length() > 0)
@@ -197,7 +200,7 @@ void SerialComm::processTimeout(){
             no_data=true;
     } else{
         serial.write(msgRequest);
-        qDebug() << "Write: " << msgRequest.toHex();
+        qDebug() << "Timeout Write: " << msgRequest.toHex();
     }
 }
 
