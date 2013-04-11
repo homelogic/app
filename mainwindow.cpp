@@ -83,19 +83,6 @@ void MainWindow::timer_start(){
     }
 }
 
-void MainWindow::device_timer_timeout(){
-    //qDebug() << "\nTimeout Received";
-    myDevice.check_updated();
-}
-
-void MainWindow::check_temperature_timeout(){
-    myDevice.currentTemperature();
-}
-
-void MainWindow::check_status_timeout(){
-    qDebug() << "Second timeout received";
-    myDevice.currentStatus();
-}
 
 void MainWindow::load_rooms(){
     myRoom.load_room_list();
