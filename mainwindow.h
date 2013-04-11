@@ -30,7 +30,6 @@ public:
     void load_device_list();
     void load_rooms();
     void timer_start();
-    void change_updated(QString msg);
 
 
 private slots:
@@ -51,12 +50,6 @@ private slots:
     void on_removeRoom_clicked();
 
     void on_newRoomButton_clicked();
-
-    void device_timer_timeout();
-
-    void check_status_timeout();
-
-    void check_temperature_timeout();
 
     void update_StatusMonitor(QString update);
 
